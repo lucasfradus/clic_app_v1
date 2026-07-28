@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "375635201949",
+    "project_id": "clic-app-b18ed",
+    "storage_bucket": "clic-app-b18ed.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:375635201949:android:c2466bd69814ef75c52974",
+        "android_client_info": {
+          "package_name": "com.clicestudio.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRzuJQHAKe0PxmWpIDRL4YrORvVFuRXrM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -9,7 +9,11 @@
     "userInterfaceStyle": "light",
     "ios": {
       "bundleIdentifier": "com.clicestudio.app",
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "infoPlist": {
+        "NSCameraUsageDescription": "CLIC usa la cámara para tu foto de perfil y la foto del documento del tutor en la autorización de menores.",
+        "NSPhotoLibraryUsageDescription": "CLIC accede a tus fotos para elegir tu foto de perfil o el documento del tutor."
+      }
     },
     "android": {
       "package": "com.clicestudio.app",

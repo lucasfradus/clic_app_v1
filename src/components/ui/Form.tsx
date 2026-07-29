@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     letterSpacing: 1.5,
     textTransform: 'uppercase',
-    color: colors.taupeDark,
+    color: colors.neutralDark,
   },
   field: {
     gap: 8,
@@ -147,8 +147,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
   },
   pillActive: {
-    backgroundColor: colors.taupe,
-    borderColor: colors.taupe,
+    backgroundColor: colors.neutral,
+    borderColor: colors.neutral,
   },
   pillText: {
     fontFamily: fonts.regular,
@@ -176,8 +176,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   checkboxChecked: {
-    backgroundColor: colors.taupe,
-    borderColor: colors.taupe,
+    backgroundColor: colors.neutral,
+    borderColor: colors.neutral,
   },
   checkmark: {
     fontSize: 11,

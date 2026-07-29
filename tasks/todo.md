@@ -122,12 +122,18 @@ Ver memoria [[clic-notificaciones-infra-push]] para el mapa de eventos.
 **Decisiones abiertas menores:** lead time del recordatorio (X horas);
 ¿recordatorio push-only o también email?; copy corto por tipo (título/cuerpo).
 
-## Pendientes de la pasada de tema neutro
-- [ ] **Rename semántico** de tokens históricos (`beige`/`taupe` hoy son grises)
-      → roles (`subtle`/`neutral`/…) en los ~29 archivos que consumen `@/theme`.
-- [ ] Neutralizar **`brandText`** (`src/theme/index.ts`): hoy dice "studio
-      pilates" y el login "Bienvenida / Tu espacio de práctica" — atado a Pilates.
-      Def de producto: tagline neutro de CLIC.
+## Cerrados (pasada de tema neutro)
+- [x] **Rename semántico** de tokens: `beige→subtle`, `beigeSoft→subtleSoft`,
+      `taupe→neutral`, `taupeDark→neutralDark` en todo `@/theme` + usos.
+- [x] **`brandText`**: tagline "studio pilates" ya no se muestra; "Bienvenida"→
+      "Bienvenido". Subtítulo "Tu espacio de práctica" se mantiene (decisión).
+- [x] Afordancia Pressables sueltos + pre-títulos de flujos → se dejan como están
+      (chevron OK; los pre-títulos de onboarding son contexto, no navegación).
+
+## Hardening opcional
+- [ ] Restringir la API key de Firebase en Google Cloud (Android + package
+      com.clicestudio.app + SHA-1 del keystore). No es secreto real; el alert de
+      GitHub ya se descartó. Link: console.cloud.google.com/apis/credentials?project=clic-app-b18ed
 
 ## Ideas / más adelante
 - [ ] **Analytics con Firebase** (medir uso → base para vender publicidad).

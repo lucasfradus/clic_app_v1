@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   secondary: {
     backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: colors.taupe,
+    borderColor: colors.neutral,
   },
   disabled: {
     opacity: 0.45,

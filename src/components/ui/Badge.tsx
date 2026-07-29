@@ -10,7 +10,7 @@ const variantStyles: Record<BadgeVariant, { bg: string; fg: string }> = {
   ok: { bg: colors.sageBg, fg: colors.sage },
   lw: { bg: colors.terracottaBg, fg: colors.terracotta },
   fu: { bg: colors.line, fg: colors.inkMute },
-  tuya: { bg: colors.taupe, fg: colors.ink },
+  tuya: { bg: colors.neutral, fg: colors.ink },
   wait: { bg: colors.amberBg, fg: colors.amber },
 };
 

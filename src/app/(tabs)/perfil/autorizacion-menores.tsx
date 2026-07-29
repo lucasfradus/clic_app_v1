@@ -207,6 +207,6 @@ const styles = StyleSheet.create({
   field: { gap: 6 },
   fieldMain: { fontFamily: fonts.regular, fontSize: 14, color: colors.ink },
   fieldSub: { fontFamily: fonts.regular, fontSize: 12, color: colors.inkSoft },
-  docLink: { fontFamily: fonts.regular, fontSize: 13, color: colors.taupeDark },
+  docLink: { fontFamily: fonts.regular, fontSize: 13, color: colors.neutralDark },
   selfStart: { alignSelf: 'flex-start' },
 });

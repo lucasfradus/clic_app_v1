@@ -305,14 +305,14 @@ const styles = StyleSheet.create({
 
   extra: {
     marginBottom: 36,
-    backgroundColor: colors.beigeSoft,
-    borderColor: colors.beige,
+    backgroundColor: colors.subtleSoft,
+    borderColor: colors.subtle,
   },
   extraNum: {
     fontFamily: fonts.display,
     fontSize: 38,
     lineHeight: 40,
-    color: colors.taupeDark,
+    color: colors.neutralDark,
     marginTop: 8,
     marginBottom: 4,
   },

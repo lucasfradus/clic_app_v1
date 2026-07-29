@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     zIndex: 2,
   },
-  avatarCamText: { fontSize: 12, color: colors.taupe },
+  avatarCamText: { fontSize: 12, color: colors.neutral },
   name: {
     fontFamily: fonts.display,
     fontSize: 26,
@@ -378,7 +378,7 @@ const styles = StyleSheet.create({
   },
   bar: {
     width: '100%',
-    backgroundColor: colors.taupe,
+    backgroundColor: colors.neutral,
     borderRadius: 10,
   },
 
@@ -396,7 +396,7 @@ const styles = StyleSheet.create({
   menuIcon: {
     width: 24,
     textAlign: 'center',
-    color: colors.taupeDark,
+    color: colors.neutralDark,
     fontSize: 14,
   },
   menuLabel: {

@@ -39,7 +39,7 @@ export default function Avatar({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.taupe,
+    backgroundColor: colors.neutral,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',

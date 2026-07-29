@@ -407,7 +407,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 14,
   },
-  pillActive: { backgroundColor: colors.taupe, borderColor: colors.taupe },
+  pillActive: { backgroundColor: colors.neutral, borderColor: colors.neutral },
   pillText: {
     fontFamily: fonts.regular,
     fontSize: 11,
@@ -442,7 +442,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     letterSpacing: 0.5,
     textTransform: 'uppercase',
-    color: colors.taupeDark,
+    color: colors.neutralDark,
   },
   submit: { paddingVertical: 14 },
 });

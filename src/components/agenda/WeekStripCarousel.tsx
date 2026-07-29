@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
   dayLetter: {
     fontFamily: fonts.medium,
     fontSize: 9,
-    color: colors.taupeDark,
+    color: colors.neutralDark,
     letterSpacing: 2,
     textTransform: 'uppercase',
   },

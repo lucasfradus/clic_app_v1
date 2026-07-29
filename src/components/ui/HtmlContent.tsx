@@ -53,7 +53,7 @@ const tagsStyles: Record<string, MixedStyleDeclaration> = {
   ol: { marginTop: 6, marginBottom: 12, paddingLeft: 22 },
   li: { marginBottom: 6 },
   a: {
-    color: colors.taupeDark,
+    color: colors.neutralDark,
     textDecorationLine: 'underline',
   },
 };

@@ -14,6 +14,7 @@ import { useAuth } from '@/store/auth';
 import { useSelectedSede } from '@/store/sede';
 import type { Suscripcion, SuscripcionEstado } from '@/types';
 import { formatShortDate, daysFromNow, formatARS } from '@/lib/date';
+import { accesosReservables, accesosReservablesGrupo } from '@/lib/accesos';
 import { ApiError } from '@/api/client';
 import { toast } from '@/store/toast';
 import { colors, fonts } from '@/theme';
@@ -160,7 +161,7 @@ export default function Cuenta() {
                       {g.accesosUsados} / {g.accesos}
                     </Text>
                     <Text style={styles.statSub}>
-                      {Math.max(0, g.accesos - g.accesosUsados)} restantes
+                      {Math.max(0, accesosReservablesGrupo(g))} restantes
                     </Text>
                   </Card>
                 ))
@@ -171,11 +172,7 @@ export default function Cuenta() {
                     {stats.accesosUsados} / {stats.accesos}
                   </Text>
                   <Text style={styles.statSub}>
-                    {Math.max(
-                      0,
-                      stats.accesos + stats.accesosExtra - stats.accesosUsados
-                    )}{' '}
-                    restantes
+                    {Math.max(0, accesosReservables(stats))} restantes
                   </Text>
                   <Badge variant="ok" style={styles.statBadge}>
                     En curso

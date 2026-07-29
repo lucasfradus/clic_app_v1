@@ -35,14 +35,12 @@ App móvil (Expo/RN) de CLIC. Un solo tema neutro para todas las unidades
 - [ ] Pendiente revisar Pressables ad-hoc (qrBtn, pills, filas de menú) — hoy
       tienen chevron `→`, aceptable, pero revisar consistencia global.
 
-### 5. Agenda: aviso de clases aún no habilitadas ✅ (parcial)
+### 5. Agenda: aviso de clases aún no habilitadas ✅
 - [x] Banner informativo debajo del día cuando TODO el día está
-      `FUERA_DE_VENTANA`. Proactivo, sin tener que tocar una clase.
-- [ ] **"en X días" exacto** requiere backend: la API `/api/v1/clases` NO
-      devuelve `sede.diasReservaAnticipada` (lo usa solo server-side). Follow-up
-      chico en Clicnet: agregar ese número (o `reservaAbreEn` ISO por clase) a la
-      respuesta → la app calcula `daysUntil(inicio) - diasReservaAnticipada`.
-      Implica deploy de Clicnet a prod (la app pega a prod).
+      `FUERA_DE_VENTANA`.
+- [x] **"en X días" exacto** — Clicnet expone `reservaAbreEn` en `/api/v1/clases`
+      (PR #254, prod); la app calcula "se habilitan en X días / mañana" con
+      fallback genérico. 
 
 ### 6. Sacar pre-títulos / dar más aire (TODAS las páginas) ✅ (parcial)
 - [x] Componente `PageHeader` único (sin pre-título, título 40px, +aire).
@@ -136,25 +134,14 @@ Ver memoria [[clic-notificaciones-infra-push]] para el mapa de eventos.
       GitHub ya se descartó. Link: console.cloud.google.com/apis/credentials?project=clic-app-b18ed
 
 ## Ideas / más adelante
-- [ ] **Analytics con Firebase** (medir uso → base para vender publicidad).
-  - Base YA lista: `src/lib/analytics.ts` es un no-op con `trackEvent` enchufado
-    en login/logout (store) y reservas/lista-espera (api). Pensado para Firebase.
-  - Usar el **mismo proyecto Firebase** del push (`clic-app-b18ed`, ya hay
-    google-services.json) → sin proveedor nuevo ni costo.
-  - Pasos: (1) `@react-native-firebase/app` + `/analytics` (plugin + **rebuild**);
-    (2) `trackEvent` → `logEvent` (un archivo, call-sites ya existen);
-    (3) screen tracking auto (listener de expo-router → `page_view` por pantalla).
-  - Métricas para el objetivo de ads: **DAU/MAU + retención** (audiencia),
-    **vistas/tiempo por pantalla** (tasar inventario — la Agenda seguro lidera),
-    y cuando haya slots: **impresiones/clicks por slot**.
-  - Ojo: consentimiento/privacidad antes de lanzar ads (políticas de stores).
-  - Alternativa si se quiere más producto: PostHog (funnels/cohortes/self-host).
-- [ ] **Pantalla de preloader/carga** con el logo de CLIC (el iso). Mientras la
-      app bootstrapea (fuentes, token, sede, sesión) hoy muestra `null`/`Loader`
-      genérico. Armar algo de marca — iso centrado, quizás con una animación
-      sutil (reanimated: fade/pulse). Aprovecha la infra de gestos/anim ya
-      montada. Distinto del splash nativo (ese es pre-JS); esto es el estado de
-      carga in-app.
+- [x] **Preloader** con el iso (pulso, reanimated) en el app-open —
+      `src/components/ui/Preloader.tsx`, reemplaza el spinner genérico.
+- [x] **Analytics con Firebase** — código listo (`@react-native-firebase/app`
+      + `/analytics`; `trackEvent`→`logEvent`; screen tracking en el root).
+      Se **activa con el rebuild**. Para el objetivo de ads: mirar DAU/MAU +
+      retención (audiencia) y vistas/tiempo por pantalla (tasar inventario);
+      a futuro, impresiones/clicks por slot. Ojo consentimiento/privacidad
+      antes de lanzar ads. Alternativa: PostHog.
 
 ## Hecho
 - [x] Fix loop de re-render en Agenda (`useReloadOnFocus` con ref).

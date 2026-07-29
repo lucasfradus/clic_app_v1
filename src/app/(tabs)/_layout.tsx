@@ -6,7 +6,7 @@ import { Redirect, Tabs } from 'expo-router';
 import { useGuard } from '@/components/useGuard';
 import AppHeader from '@/components/layout/AppHeader';
 import ClicTabBar from '@/components/layout/ClicTabBar';
-import Loader from '@/components/ui/Loader';
+import Preloader from '@/components/ui/Preloader';
 import { getNovedades } from '@/api/novedades';
 import { getLastSeenNovedadId } from '@/lib/novedadesLeidas';
 import { useAuth } from '@/store/auth';
@@ -61,7 +61,7 @@ export default function TabsLayout() {
     })();
   }, [guard.state, alumnoId]);
 
-  if (guard.state === 'loading') return <Loader />;
+  if (guard.state === 'loading') return <Preloader />;
   if (guard.state === 'redirect') return <Redirect href={guard.href} />;
 
   return (

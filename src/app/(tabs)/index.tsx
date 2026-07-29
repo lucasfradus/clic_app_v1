@@ -3,7 +3,6 @@
 // Recarga al enfocar y al volver a foreground (§9.4).
 import { useCallback, useMemo, useState } from 'react';
 import {
-  Image,
   Pressable,
   ScrollView,
   Text,
@@ -32,7 +31,7 @@ import {
 import { useReloadOnFocus } from '@/lib/useReloadOnFocus';
 import { ApiError } from '@/api/client';
 import { toast } from '@/store/toast';
-import { brandAssets, colors, fonts, radius } from '@/theme';
+import { colors, fonts, radius } from '@/theme';
 
 const dimLabel = { color: 'rgba(253,251,250,0.5)' };
 
@@ -138,20 +137,11 @@ export default function Home() {
 
   return (
     <ScrollView contentContainerStyle={styles.page}>
-      {/* Header */}
+      {/* Header: saludo personal. Sin iso (el logo ya está en el AppHeader) ni
+          fecha. */}
       <View style={styles.head}>
-        <TagLabel>{greeting()}</TagLabel>
-        <View style={styles.titleRow}>
-          <Image
-            source={brandAssets.isoBlack}
-            style={styles.iso}
-            resizeMode="contain"
-          />
-          <PageTitle>{perfil?.nombre ?? ''}</PageTitle>
-        </View>
-        <TagLabel style={styles.date}>
-          {formatDate(new Date().toISOString(), 'EEE d MMM')}
-        </TagLabel>
+        <Text style={styles.greeting}>{greeting()}</Text>
+        <PageTitle style={styles.name}>{perfil?.nombre ?? ''}</PageTitle>
       </View>
 
       {/* Acceso: solo si la sede seleccionada tiene control de acceso (molinete
@@ -428,10 +418,14 @@ export default function Home() {
 
 const styles = StyleSheet.create({
   page: { padding: 20, paddingBottom: 32 },
-  head: { marginBottom: 28, gap: 8 },
-  titleRow: { flexDirection: 'row', alignItems: 'center', gap: 14 },
-  iso: { width: 26, height: 26 },
-  date: { marginTop: -4 },
+  head: { paddingTop: 8, marginBottom: 28 },
+  greeting: {
+    fontFamily: fonts.regular,
+    fontSize: 15,
+    color: colors.inkMute,
+    marginBottom: 6,
+  },
+  name: { fontSize: 40, lineHeight: 44 },
 
   qrBtn: {
     flexDirection: 'row',

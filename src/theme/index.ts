@@ -1,20 +1,24 @@
-// Tokens del tema CLIC (manual de marca 2024). Fuente: clic-webapp-clientes
-// src/brand/theme-clic.ts + src/styles/globals.css. Un solo tema en v1, pero
-// centralizado acá para poder evolucionarlo.
+// Tema CLIC — único y neutro ("vainilla"). Decisión de producto: una sola
+// imagen de CLIC para todas las unidades (Pilates / Hot / Fitness). No hay
+// multi-marca: la identidad la cargan logos/isologos/frases (compartidos); el
+// chrome es gris warm-neutral y el acento es el propio carbón (`ink`). Los
+// colores funcionales (sage/terracotta/amber) NO son de marca: comunican estado.
+// Nota: los nombres de token (beige/taupe) son históricos; hoy son roles de
+// gris. Rename semántico pendiente como limpieza aparte.
 
 export const colors = {
-  bg: '#edece7',
-  surface: '#fdfbfa',
-  beige: '#dfd4ca',
-  beigeSoft: '#e8e0d6',
-  taupe: '#bcac9e',
-  taupeDark: '#9a8a7c',
-  ink: '#2c2f34',
-  inkSoft: '#5a5d62',
-  inkMute: '#9a9da2',
-  line: '#e0d8cd',
-  lineSoft: '#ebe5db',
-  // Acentos funcionales (no son de marca, solo UI)
+  bg: '#f5f4f2', // página — warm-gray, no clínico
+  surface: '#ffffff', // tarjetas
+  beige: '#e7e5e1', // relleno sutil (rol: subtle)
+  beigeSoft: '#efedea', // relleno sutil suave (rol: subtleSoft)
+  taupe: '#a6a39e', // gris medio (bordes activos, iconos) (rol: neutral)
+  taupeDark: '#6e6b67', // gris fuerte (labels secundarias) (rol: neutralStrong)
+  ink: '#26282b', // texto principal / superficies oscuras / acento monocromo
+  inkSoft: '#53565a',
+  inkMute: '#8d9095',
+  line: '#e5e3df',
+  lineSoft: '#efedea',
+  // Acentos funcionales (no son de marca, solo estado UI)
   sage: '#8a9a82',
   sageBg: '#e6ebe2',
   terracotta: '#b87560',
@@ -51,7 +55,7 @@ export const brandText = {
   name: 'CLIC',
   tagline: 'studio pilates',
   fullName: 'CLIC studio pilates',
-  loginWelcome: 'Bienvenida',
+  loginWelcome: 'Bienvenido',
   loginSubtitle: 'Tu espacio de práctica',
   fallbackQuote: 'Tu pilates empieza acá.',
   fallbackCta: 'Consultá con tu sede',

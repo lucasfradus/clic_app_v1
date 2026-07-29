@@ -16,7 +16,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Watermark from '@/components/brand/Watermark';
 import Avatar from '@/components/ui/Avatar';
 import { Card, DarkCard } from '@/components/ui/Card';
-import { TagLabel, PageTitle } from '@/components/ui/Text';
+import { TagLabel } from '@/components/ui/Text';
+import PageHeader from '@/components/layout/PageHeader';
 import { useFotoPerfil } from '@/lib/useFotoPerfil';
 import { useAuth } from '@/store/auth';
 import { useSelectedSede } from '@/store/sede';
@@ -104,6 +105,7 @@ export default function Perfil() {
   const menu: { label: string; icon: string; to: Href }[] = [
     { label: 'Datos personales', icon: '☺', to: '/perfil/editar' },
     { label: 'Cambiar contraseña', icon: '⚙', to: '/perfil/password' },
+    { label: 'Configuración', icon: '☰', to: '/perfil/configuracion' },
     {
       label: 'Consentimiento informado',
       icon: '✎',
@@ -124,10 +126,7 @@ export default function Perfil() {
 
   return (
     <ScrollView contentContainerStyle={styles.page}>
-      <View style={styles.head}>
-        <TagLabel>Tu perfil</TagLabel>
-        <PageTitle style={styles.title}>Perfil</PageTitle>
-      </View>
+      <PageHeader title="Perfil" />
 
       {/* Hero oscuro */}
       <DarkCard style={styles.hero}>
@@ -295,8 +294,6 @@ export default function Perfil() {
 
 const styles = StyleSheet.create({
   page: { padding: 20, paddingBottom: 32, gap: 20 },
-  head: { marginBottom: 8 },
-  title: { marginTop: 8 },
 
   hero: {
     paddingTop: 36,

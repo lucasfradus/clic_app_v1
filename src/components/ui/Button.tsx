@@ -53,16 +53,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  // Primario = fondo carbón (`ink`) + texto claro: acento monocromo, alto
+  // contraste. Con el tema neutro un fondo gris medio no se leía como tocable.
   primary: {
-    backgroundColor: colors.taupe,
+    backgroundColor: colors.ink,
   },
   secondary: {
     backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: colors.line,
+    borderColor: colors.taupe,
   },
   disabled: {
-    opacity: 0.6,
+    opacity: 0.45,
   },
   pressed: {
     opacity: 0.85,
@@ -74,9 +76,9 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   textPrimary: {
-    color: colors.ink,
+    color: colors.surface,
   },
   textSecondary: {
-    color: colors.inkSoft,
+    color: colors.ink,
   },
 });

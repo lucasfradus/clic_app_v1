@@ -41,3 +41,13 @@ example
 # generated native folders
 /ios
 /android
+
+# Firebase — SOLO la clave de cuenta de servicio es secreta (NUNCA commitear).
+# google-services.json es config de cliente (va en la app) y SÍ se trackea,
+# porque EAS Build solo sube archivos trackeados por git.
+GoogleService-Info.plist
+*-firebase-adminsdk-*.json
+
+# Arte fuente del logo (los assets derivados viven en src/assets/clic/)
+/logo.png
+/fondo frnasparante.png

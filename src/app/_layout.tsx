@@ -11,6 +11,7 @@ import {
   Poppins_700Bold,
 } from '@expo-google-fonts/poppins';
 import { Italiana_400Regular } from '@expo-google-fonts/italiana';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { setUnauthorizedHandler } from '@/api/client';
 import { useAuth } from '@/store/auth';
 import { toast } from '@/store/toast';
@@ -47,7 +48,7 @@ export default function RootLayout() {
   if (!fontsLoaded) return null;
 
   return (
-    <>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <StatusBar style="dark" />
       <Stack
         screenOptions={{
@@ -56,6 +57,6 @@ export default function RootLayout() {
         }}
       />
       <Toaster />
-    </>
+    </GestureHandlerRootView>
   );
 }

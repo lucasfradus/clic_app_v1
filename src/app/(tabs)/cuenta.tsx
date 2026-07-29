@@ -5,7 +5,8 @@ import { useCallback, useMemo, useState } from 'react';
 import { ScrollView, Text, View, StyleSheet } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { Card, DarkCard } from '@/components/ui/Card';
-import { TagLabel, PageTitle } from '@/components/ui/Text';
+import { TagLabel } from '@/components/ui/Text';
+import PageHeader from '@/components/layout/PageHeader';
 import { Badge, type BadgeVariant } from '@/components/ui/Badge';
 import Watermark from '@/components/brand/Watermark';
 import { getSuscripciones } from '@/api/suscripciones';
@@ -84,10 +85,7 @@ export default function Cuenta() {
 
   return (
     <ScrollView contentContainerStyle={styles.page}>
-      <View style={styles.head}>
-        <TagLabel>Mi cuenta</TagLabel>
-        <PageTitle style={styles.title}>Tu plan</PageTitle>
-      </View>
+      <PageHeader title="Tu plan" />
 
       {loading && !plan ? (
         <Card>
@@ -114,14 +112,15 @@ export default function Cuenta() {
 
             <View style={styles.planDates}>
               {plan.fechaPago && (
-                <View style={styles.planDateRow}>
+                <View style={styles.planDateCol}>
                   <TagLabel style={dimLabel}>Pagaste</TagLabel>
                   <Text style={styles.planDateValue}>
                     {formatShortDate(plan.fechaPago)}
                   </Text>
                 </View>
               )}
-              <View style={styles.planDateRow}>
+              {plan.fechaPago && <View style={styles.planDateDivider} />}
+              <View style={styles.planDateCol}>
                 <TagLabel style={dimLabel}>
                   {vencido ? 'Venció' : 'Vence'}
                 </TagLabel>
@@ -130,15 +129,15 @@ export default function Cuenta() {
                     style={[styles.planDateValue, vencido && styles.vencido]}
                   >
                     {formatShortDate(plan.vigenciaHasta)}
-                    {vencido && diasRestantes !== null && (
-                      <Text style={styles.vencidoExtra}>
-                        {' · '}hace {Math.abs(diasRestantes)}{' '}
-                        {Math.abs(diasRestantes) === 1 ? 'día' : 'días'}
-                      </Text>
-                    )}
                   </Text>
                 ) : (
                   <Text style={styles.planDateValue}>Sin vencimiento fijo</Text>
+                )}
+                {vencido && diasRestantes !== null && (
+                  <Text style={styles.vencidoExtra}>
+                    hace {Math.abs(diasRestantes)}{' '}
+                    {Math.abs(diasRestantes) === 1 ? 'día' : 'días'}
+                  </Text>
                 )}
               </View>
             </View>
@@ -243,8 +242,6 @@ export default function Cuenta() {
 
 const styles = StyleSheet.create({
   page: { padding: 20, paddingBottom: 32 },
-  head: { marginBottom: 28 },
-  title: { marginTop: 8 },
   bodyText: { fontFamily: fonts.regular, fontSize: 13, color: colors.ink },
 
   balanceCard: { marginBottom: 24 },
@@ -257,16 +254,24 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     zIndex: 1,
   },
-  planDates: { gap: 10, marginBottom: 18, zIndex: 1 },
-  planDateRow: {
+  planDates: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'stretch',
+    marginTop: 4,
+    marginBottom: 18,
+    zIndex: 1,
+  },
+  planDateCol: { flex: 1, gap: 7 },
+  planDateDivider: {
+    width: 1,
+    alignSelf: 'stretch',
+    backgroundColor: 'rgba(253, 251, 250, 0.12)',
+    marginHorizontal: 16,
   },
   planDateValue: {
-    fontFamily: fonts.regular,
-    fontSize: 13,
-    color: 'rgba(253, 251, 250, 0.85)',
+    fontFamily: fonts.medium,
+    fontSize: 16,
+    color: colors.surface,
   },
   vencido: { color: colors.terracotta, fontFamily: fonts.semibold },
   vencidoExtra: {

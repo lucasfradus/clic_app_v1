@@ -28,6 +28,7 @@ export default function ClicTabBar() {
           ? pathname === t.href
           : pathname.startsWith(t.href);
         const badge = badges[t.href] ?? 0;
+        const highlight = badge > 0 && !active;
         return (
           <Pressable
             key={t.href}
@@ -35,7 +36,13 @@ export default function ClicTabBar() {
             onPress={() => router.navigate(t.href)}
           >
             <View style={styles.labelWrap}>
-              <Text style={[styles.label, active && styles.labelActive]}>
+              <Text
+                style={[
+                  styles.label,
+                  active && styles.labelActive,
+                  highlight && styles.labelHighlight,
+                ]}
+              >
                 {t.label}
               </Text>
               {badge > 0 && (
@@ -86,6 +93,10 @@ const styles = StyleSheet.create({
   },
   labelActive: {
     color: colors.ink,
+  },
+  labelHighlight: {
+    color: colors.ink,
+    fontFamily: fonts.semibold,
   },
   badge: {
     backgroundColor: colors.terracotta,

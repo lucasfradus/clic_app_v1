@@ -11,7 +11,8 @@ import {
 } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { Card, DarkCard } from '@/components/ui/Card';
-import { TagLabel, PageTitle } from '@/components/ui/Text';
+import { TagLabel } from '@/components/ui/Text';
+import PageHeader from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/Button';
 import Watermark from '@/components/brand/Watermark';
 import HtmlContent from '@/components/ui/HtmlContent';
@@ -64,10 +65,7 @@ export default function Novedades() {
 
   return (
     <ScrollView contentContainerStyle={styles.page}>
-      <View style={styles.head}>
-        <TagLabel>What's new</TagLabel>
-        <PageTitle style={styles.title}>Novedades</PageTitle>
-      </View>
+      <PageHeader title="Novedades" />
 
       {status === 'loading' && (
         <Card style={styles.center}>
@@ -121,12 +119,6 @@ const styles = StyleSheet.create({
   page: {
     padding: 20,
     gap: 18,
-  },
-  head: {
-    marginBottom: 10,
-  },
-  title: {
-    marginTop: 8,
   },
   center: {
     alignItems: 'center',

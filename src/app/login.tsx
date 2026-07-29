@@ -55,7 +55,10 @@ export default function Login() {
   return (
     <KeyboardAvoidingView
       style={styles.page}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      // iOS: 'padding'. Android: 'height' — sin behavior el teclado tapaba los
+      // campos (la card está centrada y no subía). Con ScrollView +
+      // keyboardShouldPersistTaps el input queda visible y navegable.
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView
         contentContainerStyle={styles.scroll}
@@ -67,7 +70,6 @@ export default function Login() {
             style={styles.logo}
             resizeMode="contain"
           />
-          <Text style={styles.tagline}>{brandText.tagline}</Text>
 
           <PageTitle style={styles.title}>{brandText.loginWelcome}</PageTitle>
           <TagLabel>{brandText.loginSubtitle}</TagLabel>
@@ -147,15 +149,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
   },
   logo: {
-    width: 64,
-    height: 28,
-    marginBottom: 4,
-  },
-  tagline: {
-    fontFamily: fonts.accent,
-    fontSize: 14,
-    color: colors.taupeDark,
-    marginBottom: 32,
+    width: 104,
+    height: 46,
+    marginBottom: 30,
   },
   title: {
     marginBottom: 6,

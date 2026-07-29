@@ -43,7 +43,9 @@
           "icon": "./assets/images/notification-icon.png",
           "color": "#26282b"
         }
-      ]
+      ],
+      "@react-native-firebase/app",
+      "@react-native-firebase/analytics"
     ],
     "experiments": {
       "typedRoutes": true,

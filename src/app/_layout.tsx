@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Stack } from 'expo-router';
+import { Stack, usePathname } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import {
@@ -14,6 +14,7 @@ import { Italiana_400Regular } from '@expo-google-fonts/italiana';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { setUnauthorizedHandler } from '@/api/client';
 import { useAuth } from '@/store/auth';
+import { trackScreen } from '@/lib/analytics';
 import { toast } from '@/store/toast';
 import Toaster from '@/components/ui/Toaster';
 import { colors } from '@/theme';
@@ -44,6 +45,12 @@ export default function RootLayout() {
   useEffect(() => {
     if (fontsLoaded) SplashScreen.hideAsync();
   }, [fontsLoaded]);
+
+  // Analytics: registrar cada pantalla al cambiar de ruta (screen_view).
+  const pathname = usePathname();
+  useEffect(() => {
+    if (pathname) trackScreen(pathname);
+  }, [pathname]);
 
   if (!fontsLoaded) return null;
 

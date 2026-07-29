@@ -8,13 +8,15 @@
     "scheme": "clic",
     "userInterfaceStyle": "light",
     "ios": {
+      "bundleIdentifier": "com.clicestudio.app",
       "icon": "./assets/expo.icon"
     },
     "android": {
+      "package": "com.clicestudio.app",
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#26282b",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false
@@ -28,17 +30,31 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#edece7",
+          "backgroundColor": "#26282b",
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "imageWidth": 100
         }
       ],
       "expo-secure-store",
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/notification-icon.png",
+          "color": "#26282b"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "7e7c4b25-b893-4afc-894a-ddd0b34a7b2f"
+      }
+    },
+    "owner": "lucasfra"
   }
 }

@@ -6,6 +6,8 @@ import { setToken, clearToken, loadToken } from '../api/client';
 import { clearCachedQr } from '../lib/accessQr';
 import { useSede } from './sede';
 import { trackEvent } from '../lib/analytics';
+import { usePush } from './push';
+import { unregisterPushToken } from '../api/push';
 import type { AuthUser, Perfil } from '../types';
 
 // En la web `user.alumnoId` vive solo en memoria (se pierde al recargar). En
@@ -70,6 +72,11 @@ export const useAuth = create<AuthState>((set, get) => ({
   },
 
   logout: () => {
+    // Dar de baja el push token ANTES de limpiar el token de auth (el DELETE
+    // necesita ir autenticado). Best-effort; el header se captura al llamar.
+    const pushToken = usePush.getState().token;
+    if (pushToken) unregisterPushToken(pushToken).catch(() => {});
+    usePush.getState().setToken(null);
     trackEvent('logout');
     clearToken();
     clearCachedQr();

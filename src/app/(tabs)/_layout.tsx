@@ -14,6 +14,7 @@ import { useNovedades } from '@/store/novedades';
 import { usePush } from '@/store/push';
 import { registerForPushNotificationsAsync } from '@/lib/push';
 import { registerPushToken } from '@/api/push';
+import { useNotificationRouting } from '@/lib/useNotificationRouting';
 import { colors } from '@/theme';
 
 export default function TabsLayout() {
@@ -21,6 +22,9 @@ export default function TabsLayout() {
   const alumnoId = useAuth((s) => s.alumnoId);
   const checkedRef = useRef(false);
   const pushRef = useRef(false);
+
+  // Deep-link: al tocar una notificación, rutea según su tipo.
+  useNotificationRouting();
 
   // Registro de push (una vez por sesión, tras pasar el guard): saca el
   // ExpoPushToken y lo manda a Clicnet (POST /push/register). Best-effort.

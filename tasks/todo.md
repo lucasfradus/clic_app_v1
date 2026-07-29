@@ -110,10 +110,14 @@ Ver memoria [[clic-notificaciones-infra-push]] para el mapa de eventos.
 - [~] **Recordatorio de clase**: DESCARTADO por ahora (poco crítico + suma cron/
       scheduler). La columna `NotifPrefs.recordatorioClase` queda por si se retoma.
 
-**Fase 4 — Pulido**
-- [ ] Deep-link al tocar la notificación (lista espera→Agenda, novedad→News,
-      vencimiento→Cuenta).
-- [ ] Limpieza de tokens muertos, baja en logout, dedup de recordatorios.
+**Fase 4 — Pulido ✅ (app-only, sin deploy)**
+- [x] **Deep-link** al tocar la notificación (`src/lib/useNotificationRouting.ts`):
+      lista_espera/clase_cancelada→Agenda, novedad→News, vencimiento→Cuenta.
+- [x] **Baja del token en logout** (`store/auth.ts` → `unregisterPushToken`).
+- [x] Limpieza de tokens muertos → ya estaba en `enviarPushMasivo`.
+- [ ] **Ícono de notificación** — configurado; entra en el próximo `eas build`.
+- Nota: deep-link + logout son JS (se ven por Metro); probar deep-link requiere
+  tocar un push real. El ícono necesita rebuild.
 
 **Decisiones abiertas menores:** lead time del recordatorio (X horas);
 ¿recordatorio push-only o también email?; copy corto por tipo (título/cuerpo).

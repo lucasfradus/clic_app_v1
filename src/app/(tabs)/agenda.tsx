@@ -13,7 +13,9 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Watermark from '@/components/brand/Watermark';
 import { Card } from '@/components/ui/Card';
-import { TagLabel, PageTitle } from '@/components/ui/Text';
+import { TagLabel } from '@/components/ui/Text';
+import PageHeader from '@/components/layout/PageHeader';
+import WeekStripCarousel from '@/components/agenda/WeekStripCarousel';
 import { Badge, type BadgeVariant } from '@/components/ui/Badge';
 import ConfirmModal from '@/components/ui/ConfirmModal';
 import { getClases } from '@/api/clases';
@@ -42,8 +44,6 @@ import { useReloadOnFocus } from '@/lib/useReloadOnFocus';
 import { ApiError } from '@/api/client';
 import { toast } from '@/store/toast';
 import { colors, fonts, radius } from '@/theme';
-
-const DAY_LETTERS = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
 
 type ConfirmState =
   | { kind: 'reservar'; clase: Clase }
@@ -204,6 +204,16 @@ export default function Agenda() {
   );
 
   const reservadasDelDia = clasesDelDia.filter((c) => c.yaReservada).length;
+
+  // Todas las clases del día caen fuera de la ventana de reserva: el día
+  // todavía no se abrió para anotarse. Avisamos proactivamente debajo del día
+  // (sin tener que tocar una clase para enterarse).
+  const diaFueraDeVentana = useMemo(
+    () =>
+      clasesDelDia.length > 0 &&
+      clasesDelDia.every((c) => c.motivoNoDisponible === 'FUERA_DE_VENTANA'),
+    [clasesDelDia]
+  );
 
   function handleSalonChange(newId: number | undefined) {
     setSelectedSalonId(newId);
@@ -400,10 +410,7 @@ export default function Agenda() {
 
   return (
     <ScrollView contentContainerStyle={styles.page}>
-      <View style={styles.head}>
-        <TagLabel>Clases disponibles</TagLabel>
-        <PageTitle style={styles.title}>Agenda</PageTitle>
-      </View>
+      <PageHeader title="Agenda" />
 
       {/* Pill de salón (sede vive en el header global) */}
       {showSalonPill && (
@@ -440,35 +447,12 @@ export default function Agenda() {
         >
           <Text style={styles.weekNavBtnText}>←</Text>
         </Pressable>
-        <View style={styles.weekStrip}>
-          {days.map((d, i) => {
-            const active = sameDay(d.toISOString(), selectedDay);
-            return (
-              <Pressable
-                key={i}
-                onPress={() => setSelectedDay(d)}
-                style={[styles.weekDay, active && styles.weekDayActive]}
-              >
-                <Text
-                  style={[
-                    styles.weekDayLetter,
-                    active && styles.weekDayLetterActive,
-                  ]}
-                >
-                  {DAY_LETTERS[i]}
-                </Text>
-                <Text
-                  style={[
-                    styles.weekDayNum,
-                    active && styles.weekDayNumActive,
-                  ]}
-                >
-                  {d.getDate()}
-                </Text>
-              </Pressable>
-            );
-          })}
-        </View>
+        <WeekStripCarousel
+          weekRef={weekRef}
+          selectedDay={selectedDay}
+          onSelectDay={setSelectedDay}
+          onChangeWeek={(delta) => setWeekRef((w) => addDays(w, delta))}
+        />
         <Pressable
           style={styles.weekNavBtn}
           onPress={() => setWeekRef(addDays(weekRef, 7))}
@@ -489,6 +473,16 @@ export default function Agenda() {
               ? ` · ${reservadasDelDia} reservada${reservadasDelDia === 1 ? '' : 's'}`
               : ''}
           </TagLabel>
+        </View>
+      )}
+
+      {/* Aviso: el día seleccionado aún no está abierto para reservar */}
+      {activa && diaFueraDeVentana && (
+        <View style={styles.infoBanner}>
+          <Text style={styles.infoBannerText}>
+            Estas clases todavía no están disponibles para anotarse. Se habilitan
+            unos días antes de la fecha.
+          </Text>
         </View>
       )}
 
@@ -657,8 +651,6 @@ export default function Agenda() {
 
 const styles = StyleSheet.create({
   page: { padding: 20, paddingBottom: 32 },
-  head: { marginBottom: 20 },
-  title: { marginTop: 8 },
 
   pillsRow: { flexDirection: 'row', gap: 10, marginBottom: 18 },
   pill: {
@@ -727,35 +719,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   weekNavBtnText: { fontSize: 14, color: colors.ink },
-  weekStrip: { flex: 1, flexDirection: 'row', gap: 6 },
-  weekDay: {
-    flex: 1,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.lineSoft,
-    borderRadius: 14,
-    paddingVertical: 10,
-    alignItems: 'center',
-  },
-  weekDayActive: {
-    backgroundColor: colors.ink,
-    borderColor: colors.ink,
-  },
-  weekDayLetter: {
-    fontFamily: fonts.medium,
-    fontSize: 9,
-    color: colors.taupeDark,
-    letterSpacing: 2,
-    textTransform: 'uppercase',
-  },
-  weekDayLetterActive: { color: 'rgba(253, 251, 250, 0.6)' },
-  weekDayNum: {
-    fontFamily: fonts.light,
-    fontSize: 20,
-    color: colors.ink,
-    marginTop: 4,
-  },
-  weekDayNumActive: { color: colors.surface },
 
   dayHeader: {
     flexDirection: 'row',
@@ -770,6 +733,22 @@ const styles = StyleSheet.create({
     color: colors.ink,
     textTransform: 'capitalize',
     flexShrink: 1,
+  },
+
+  infoBanner: {
+    backgroundColor: colors.beigeSoft,
+    borderWidth: 1,
+    borderColor: colors.beige,
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    marginBottom: 16,
+  },
+  infoBannerText: {
+    fontFamily: fonts.regular,
+    fontSize: 12,
+    lineHeight: 17,
+    color: colors.inkSoft,
   },
 
   empty: { alignItems: 'center', paddingVertical: 40, paddingHorizontal: 22 },

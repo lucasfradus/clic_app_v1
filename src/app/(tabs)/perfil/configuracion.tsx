@@ -160,6 +160,23 @@ export default function Configuracion() {
           <Text style={styles.rowArrow}>→</Text>
         </Pressable>
       </Card>
+
+      {/* Cuenta */}
+      <TagLabel style={styles.section}>Cuenta</TagLabel>
+      <Card style={styles.list}>
+        <Pressable
+          style={[styles.row, styles.rowLast]}
+          onPress={() => router.push('/perfil/eliminar-cuenta')}
+        >
+          <View style={styles.rowText}>
+            <Text style={styles.rowDanger}>Eliminar mi cuenta</Text>
+            <Text style={styles.rowSub}>
+              Borra tus datos personales. Es irreversible.
+            </Text>
+          </View>
+          <Text style={styles.rowArrow}>→</Text>
+        </Pressable>
+      </Card>
     </ScrollView>
   );
 }
@@ -200,6 +217,11 @@ const styles = StyleSheet.create({
     color: colors.inkSoft,
   },
   rowArrow: { color: colors.inkMute, fontSize: 13 },
+  rowDanger: {
+    fontFamily: fonts.medium,
+    fontSize: 13,
+    color: colors.terracotta,
+  },
 
   radio: {
     width: 20,

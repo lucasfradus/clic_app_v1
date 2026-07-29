@@ -13,7 +13,10 @@ App móvil (Expo/RN) de CLIC. Un solo tema neutro para todas las unidades
 - [x] **Sede por defecto**: default fijado (`clic.defaultSedeId`) que gana en el
       arranque; radio con opción "la última que usé". Solo si hay >1 sede.
 - [x] **Acerca de**: versión (expo-constants) + link a términos/políticas.
-- Futuro (no en v1): apariencia claro/oscuro, idioma, eliminar cuenta.
+- [x] **Eliminar mi cuenta** (Cuenta): confirma contraseña → `DELETE /auth/account`
+      → anonimiza en Clicnet y cierra sesión. Requisito de Google Play. Vía web =
+      email a soporte (`scripts/anonimizar-cuenta.ts`). Ver `docs/publicar-stores.md`.
+- Futuro (no en v1): apariencia claro/oscuro, idioma.
 
 ### 2. Resetear contraseña ✅
 - [x] Flujo de **reset de contraseña** (olvidé mi contraseña) desde login, con

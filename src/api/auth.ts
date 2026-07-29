@@ -33,3 +33,14 @@ export function resetPassword(email: string, code: string, password: string) {
     auth: false,
   });
 }
+
+/**
+ * Elimina (anonimiza) la cuenta del usuario autenticado. Irreversible. El
+ * server pide confirmar la contraseña si la cuenta tiene una.
+ */
+export function deleteAccount(password: string) {
+  return apiFetch<{ ok: boolean }>('/auth/account', {
+    method: 'DELETE',
+    body: { password },
+  });
+}

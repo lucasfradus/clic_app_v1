@@ -70,9 +70,11 @@ pedir borrado de sus datos: Sí** (ver bloqueante #2).
 
 ## 2. ⚠️ Bloqueantes a resolver ANTES de subir (no son features, pero frenan)
 
-### 2.1 Política de privacidad pública (Google y Apple la exigen)
-Hay que **hostear una URL pública** con la política de privacidad. La app ya
-linkea a términos/políticas desde Configuración → conviene que sea la misma URL.
+### 2.1 Política de privacidad pública (Google y Apple la exigen) — borrador listo
+Borrador completo en `docs/politica-privacidad-borrador.md`. **Falta: revisarlo,
+completar los `[corchetes]` (razón social, contacto, email de bajas) y hostearlo
+en una URL pública** (ej. `clicpilates.com/privacidad`). La app ya linkea a
+términos/políticas desde Configuración → conviene que sea la misma URL.
 - Opciones de hosting: una página en el sitio de CLIC, o `clicpilates.com/privacidad`.
 - Contenido mínimo: qué datos se recolectan (usar la tabla de la sección 1), para
   qué, con quién se comparten (Mercado Pago, Google/Firebase), cómo se pide el
@@ -80,19 +82,21 @@ linkea a términos/políticas desde Configuración → conviene que sea la misma
 - **Borrador de política:** ver `docs/politica-privacidad-borrador.md` (generar
   aparte si se pide).
 
-### 2.2 Borrado de cuenta (requisito duro de Google Play)
+### 2.2 Borrado de cuenta (requisito duro de Google Play) — ✅ HECHO
 Google Play exige, para apps con cuenta, un mecanismo para **pedir baja de cuenta
-+ datos**, accesible **desde la app Y desde una URL web** (sin necesidad de
-instalar). Hoy en la app está como *"Futuro (no en v1): eliminar cuenta"* en
-Configuración.
-- **Mínimo para cumplir:** una fila "Eliminar mi cuenta" en Configuración que
-  dispare la solicitud (endpoint nuevo en Clicnet, o mailto a soporte), **y** una
-  URL web equivalente (ej. `clicpilates.com/eliminar-cuenta`).
-- Declararlo en Play Console → *App content → Data deletion*.
++ datos**, accesible desde la app y por una vía sin la app.
+- **En la app:** Perfil → Configuración → **Eliminar mi cuenta** → confirma
+  contraseña → anonimiza en el server y cierra sesión. (Clicnet:
+  `DELETE /api/v1/auth/account` + `anonimizarCuenta()`, deployado.)
+- **Vía sin app (decisión: email a soporte):** el socio escribe a
+  `[bajas@clicpilates.com]` y el equipo corre `scripts/anonimizar-cuenta.ts`
+  (dry-run + `--apply`). Documentar ese email en la política y en la ficha.
+- **Falta (operativo, no código):** definir el email real de bajas, y
+  declararlo en Play Console → *App content → Data deletion*.
 
-### 2.3 Strings de permisos iOS (Apple rechaza sin esto)
-`app.json` **no** tiene `ios.infoPlist` con las descripciones de uso. iOS
-requiere textos para cámara y galería o la app crashea/se rechaza. Agregar:
+### 2.3 Strings de permisos iOS (Apple rechaza sin esto) — ✅ HECHO
+Ya está en `app.json` → `ios.infoPlist` con `NSCameraUsageDescription` y
+`NSPhotoLibraryUsageDescription`. (Referencia del contenido agregado:)
 ```json
 "ios": {
   "bundleIdentifier": "com.clicestudio.app",
@@ -257,5 +261,8 @@ npx eas-cli update --branch production --message "fix ..."
 - App **feature-complete** y probada end-to-end (incl. reset de contraseña).
 - Corriendo un **dev-build** de Android (perfil development) para validar en
   device el ícono de notificación, Firebase Analytics y el módulo nativo.
-- **Nada** de la sección 2 (bloqueantes) está hecho todavía: son el próximo paso
-  real hacia la publicación.
+- **Bloqueantes de la sección 2:** 2.2 (borrado de cuenta) y 2.3 (infoPlist iOS)
+  **hechos**; 2.1 (política de privacidad) tiene el borrador listo, falta
+  hostearla. Quedan tareas **operativas, no de código**: hostear la política,
+  definir el email de bajas, y completar los cuestionarios de Play Console
+  (Data safety, Data deletion, App access con usuario demo).

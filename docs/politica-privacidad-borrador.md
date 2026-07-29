@@ -81,7 +81,10 @@ suprimir** tus datos personales. Para ejercerlos, escribinos a
 **[email de contacto]**.
 
 Podés **eliminar tu cuenta y tus datos** desde la App (Perfil → Configuración →
-Eliminar mi cuenta) o desde la web en **[https://clicpilates.com/eliminar-cuenta]**.
+Eliminar mi cuenta). También podés solicitar la baja, sin necesidad de la App,
+escribiendo a **[email de bajas, ej. bajas@clicpilates.com]**. En ambos casos
+eliminamos tus datos personales y de salud, y desactivamos tu acceso; conservamos
+únicamente el historial de pagos de-identificado por obligación legal.
 
 La **Agencia de Acceso a la Información Pública**, órgano de control de la Ley
 25.326, tiene la atribución de atender denuncias y reclamos relativos al

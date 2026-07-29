@@ -3,6 +3,8 @@
 // lo incluye), todo hace no-op en vez de romper la app. Los call-sites
 // (login/logout en el store, reservas/lista-espera en la API) ya existen.
 
+import { NativeModules } from 'react-native';
+
 export type AnalyticsEventName =
   | 'login'
   | 'logout'
@@ -27,8 +29,16 @@ let intentado = false;
 function getAnalytics(): AnalyticsFactory | null {
   if (intentado) return cached;
   intentado = true;
+  // El módulo nativo de @react-native-firebase/app se registra como
+  // 'RNFBAppModule'. Si no está (dev-build previo al rebuild que lo compila),
+  // ni intentamos el require: hacerlo dispara un error que en dev LogBox
+  // muestra como red-box en cada trackScreen. Sin el nativo, no-op silencioso.
+  if (!(NativeModules as Record<string, unknown>).RNFBAppModule) {
+    cached = null;
+    return null;
+  }
   try {
-    // Require lazy: si el módulo nativo no está (build viejo), no rompe.
+    // Require lazy: solo cuando el nativo está presente.
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     cached = require('@react-native-firebase/analytics').default;
   } catch {

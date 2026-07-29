@@ -33,7 +33,6 @@ export default function TabsLayout() {
     pushRef.current = true;
     registerForPushNotificationsAsync().then((token) => {
       usePush.getState().setToken(token);
-      console.log('[PUSH TOKEN]', token ?? 'no disponible');
       if (token) {
         registerPushToken(token, Platform.OS).catch(() => {
           // best-effort: se reintenta en el próximo ingreso

@@ -15,10 +15,15 @@ App móvil (Expo/RN) de CLIC. Un solo tema neutro para todas las unidades
 - [x] **Acerca de**: versión (expo-constants) + link a términos/políticas.
 - Futuro (no en v1): apariencia claro/oscuro, idioma, eliminar cuenta.
 
-### 2. Resetear contraseña
-- [ ] Flujo de **reset de contraseña** (olvidé mi contraseña) desde login.
-  - Depende de endpoint en Clicnet (`/api/v1/auth/...`) — verificar si existe
-    recuperación por email o hay que sumarlo.
+### 2. Resetear contraseña ✅
+- [x] Flujo de **reset de contraseña** (olvidé mi contraseña) desde login, con
+      **código de 6 dígitos** por email.
+- [x] Backend Clicnet (PR #255, prod): modelo `PasswordResetToken` (sha256, 15min,
+      un solo uso) + `POST /api/v1/auth/forgot` (anti-enumeración, rate-limit
+      3/15min) + `POST /api/v1/auth/reset` (bcrypt, rate-limit 8/15min).
+- [x] App: `forgotPassword`/`resetPassword` en `api/auth.ts`; pantalla `/forgot`
+      de dos pasos (email → código+contraseña); link "¿Olvidaste tu contraseña?"
+      en el login.
 
 ### 3. Login: teclado tapa los inputs ✅
 - [x] `KeyboardAvoidingView` no tenía `behavior` en Android → agregado `'height'`
@@ -82,7 +87,7 @@ Ver memoria [[clic-notificaciones-infra-push]] para el mapa de eventos.
       (silueta blanca del iso, transparente) + plugin `expo-notifications.icon`.
       ⚠️ Es config nativa → **se ve recién en el próximo build**. Android solo
       permite silueta monocroma (usa el alfa), no el logo full-color.
-- [ ] Baja de token en logout (quedó para Fase 4).
+- [x] Baja de token en logout (`store/auth.ts` → `unregisterPushToken`).
 
 **Fase 2 — Prefs server + eventos que ya disparan ✅ (deployado a prod, PR #249)**
 - [x] Backend: `NotifPrefs` por alumno + `GET/PUT /api/v1/push/prefs`.
@@ -96,9 +101,8 @@ Ver memoria [[clic-notificaciones-infra-push]] para el mapa de eventos.
       server-side end-to-end ✅)**, vencimiento (contenido ✅). Aprendizajes:
       feriado futuro → aviso diferido al cron (no inmediato); Prisma 7 no conecta
       al proxy de prod desde local (usar pg directo); vencimiento tiene dedup 5d.
-- [ ] Limpieza test: feriado 142 (30/7 Sede Test) quedó con
-      `notificacionEnviada=false` → el cron podría mandar un push duplicado cerca
-      del 30/7. Borrar el feriado o marcarlo si molesta.
+- [x] Limpieza test: feriado 142 (30/7 Sede Test) marcado
+      `notificacionEnviada=true` en prod para evitar el push duplicado del cron.
 
 **Fase 3 — Triggers nuevos ✅ (parcial, deployado a prod, PR #252)**
 - [x] **Novedades**: hook en `crearNovedad()` (con `after()`) → push masivo a

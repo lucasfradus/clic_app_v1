@@ -28,6 +28,7 @@ import {
   formatDateLong,
   durationMinutes,
 } from '@/lib/date';
+import { accesosReservables, accesosReservablesGrupo } from '@/lib/accesos';
 import { useReloadOnFocus } from '@/lib/useReloadOnFocus';
 import { ApiError } from '@/api/client';
 import { toast } from '@/store/toast';
@@ -213,7 +214,7 @@ export default function Home() {
                     {g.accesosUsados} / {g.accesos}
                   </Text>
                   <Text style={styles.statSub}>
-                    {Math.max(0, g.accesos - g.accesosUsados)} restantes
+                    {Math.max(0, accesosReservablesGrupo(g))} restantes
                   </Text>
                 </Card>
               ))
@@ -224,11 +225,7 @@ export default function Home() {
                   {active.accesosUsados} / {active.accesos}
                 </Text>
                 <Text style={styles.statSub}>
-                  {Math.max(
-                    0,
-                    active.accesos + active.accesosExtra - active.accesosUsados
-                  )}{' '}
-                  restantes
+                  {Math.max(0, accesosReservables(active))} restantes
                 </Text>
                 <Badge variant="ok" style={styles.statBadge}>
                   {active.modalidad === 'HORARIO_FIJO'

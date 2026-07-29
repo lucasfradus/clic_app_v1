@@ -40,6 +40,7 @@ import {
   hoursUntil,
   formatDateLong,
 } from '@/lib/date';
+import { accesosReservables } from '@/lib/accesos';
 import { useReloadOnFocus } from '@/lib/useReloadOnFocus';
 import { ApiError } from '@/api/client';
 import { toast } from '@/store/toast';
@@ -83,9 +84,7 @@ export default function Agenda() {
       activas.find((s) => s.accesoMultisede)
     );
   }, [suscripciones, selectedSedeId]);
-  const accesosRestantes = activa
-    ? activa.accesos + activa.accesosExtra - activa.accesosUsados
-    : 0;
+  const accesosRestantes = accesosReservables(activa);
 
   const isVisitor = selectedSede && !selectedSede.esHome;
   const showSalonPill = salones.length > 1;

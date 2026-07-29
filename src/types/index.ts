@@ -88,9 +88,12 @@ export type SuscripcionEstado =
 export interface SuscripcionGrupo {
   id: number;
   nombre: string;
+  /** Ya incluye los accesos regalados (`accesosExtra`). No volver a sumarlos. */
   accesos: number;
   accesosUsados: number;
   accesosExtra: number;
+  /** Cuantas clases mas puede reservar de este grupo. Ver `Suscripcion.reservables`. */
+  reservables?: number;
 }
 
 export interface Suscripcion {
@@ -102,9 +105,20 @@ export interface Suscripcion {
   estado: SuscripcionEstado;
   inicio: string;
   fin: string;
+  /** Ya incluye los accesos regalados (`accesosExtra`). No volver a sumarlos. */
   accesos: number;
   accesosUsados: number;
   accesosExtra: number;
+  /**
+   * Cuantas clases mas puede reservar de verdad: `accesos - accesosUsados` menos
+   * las reservas ya confirmadas y todavia sin cursar. El backend descuenta el
+   * acceso recien en el check-in, asi que "sin consumir" no es lo mismo que
+   * "puedo reservar una mas".
+   *
+   * Opcional por compatibilidad con backends viejos; usar `accesosReservables()`
+   * de `lib/accesos`, que cae a la cuenta anterior si no viene.
+   */
+  reservables?: number;
   cancelaciones: number;
   cancelacionesUsadas: number;
   grupos?: SuscripcionGrupo[];

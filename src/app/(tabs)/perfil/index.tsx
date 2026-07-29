@@ -25,6 +25,7 @@ import { getTurnos } from '@/api/turnos';
 import { getSuscripciones } from '@/api/suscripciones';
 import type { Turno, Suscripcion } from '@/types';
 import { parse } from '@/lib/date';
+import { accesosReservables } from '@/lib/accesos';
 import { ApiError } from '@/api/client';
 import { toast } from '@/store/toast';
 import { brandAssets, brandText, colors, fonts, radius } from '@/theme';
@@ -71,9 +72,7 @@ export default function Perfil() {
       activas.find((s) => s.accesoMultisede)
     );
   }, [suscripciones, sedeId]);
-  const restantes = activa
-    ? activa.accesos + activa.accesosExtra - activa.accesosUsados
-    : 0;
+  const restantes = accesosReservables(activa);
 
   const progressByMonth = useMemo(() => {
     const now = new Date();

@@ -70,11 +70,13 @@ pedir borrado de sus datos: Sí** (ver bloqueante #2).
 
 ## 2. ⚠️ Bloqueantes a resolver ANTES de subir (no son features, pero frenan)
 
-### 2.1 Política de privacidad pública (Google y Apple la exigen) — borrador listo
-Borrador completo en `docs/politica-privacidad-borrador.md`. **Falta: revisarlo,
-completar los `[corchetes]` (razón social, contacto, email de bajas) y hostearlo
-en una URL pública** (ej. `clicpilates.com/privacidad`). La app ya linkea a
-términos/políticas desde Configuración → conviene que sea la misma URL.
+### 2.1 Política de privacidad pública (Google y Apple la exigen) — ✅ HECHO (falta deploy)
+Página pública creada en el repo `clic-pilates-landing` → `/politicas`
+(`src/app/politicas/page.tsx`, estática, datos legales reales cargados). URL
+final: **`https://www.clicpilates.com/politicas`**. Rama `feat/politicas-privacidad`
+pusheada; **falta mergear a main para que Vercel la publique en producción**.
+Borrador original (markdown) en `docs/politica-privacidad-borrador.md`.
+Usar esa URL en Play Console y App Store Connect.
 - Opciones de hosting: una página en el sitio de CLIC, o `clicpilates.com/privacidad`.
 - Contenido mínimo: qué datos se recolectan (usar la tabla de la sección 1), para
   qué, con quién se comparten (Mercado Pago, Google/Firebase), cómo se pide el

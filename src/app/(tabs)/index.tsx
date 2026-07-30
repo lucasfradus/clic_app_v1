@@ -178,7 +178,7 @@ export default function Home() {
               </View>
               <View>
                 <Text style={styles.heroTime}>{formatTime(proxima.inicio)}</Text>
-                <TagLabel style={{ color: colors.taupe }}>
+                <TagLabel style={{ color: colors.neutral }}>
                   {formatDate(proxima.inicio)}
                 </TagLabel>
               </View>
@@ -448,7 +448,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     color: 'rgba(253, 251, 250, 0.55)',
   },
-  qrCaret: { fontSize: 18, color: colors.taupe },
+  qrCaret: { fontSize: 18, color: colors.neutral },
 
   hero: { marginBottom: 36 },
   heroRow: { marginTop: 18, gap: 18, zIndex: 1 },
@@ -486,7 +486,7 @@ const styles = StyleSheet.create({
   emptyHeroMsg: {
     fontFamily: fonts.light,
     fontSize: 22,
-    color: colors.taupeDark,
+    color: colors.neutralDark,
     marginTop: 10,
   },
 

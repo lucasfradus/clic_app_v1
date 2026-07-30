@@ -146,6 +146,8 @@ export interface Clase {
   disponible: boolean;
   yaReservada: boolean;
   motivoNoDisponible?: MotivoNoDisponible;
+  /** ISO de cuándo se abre la ventana de reserva. Ausente en backends viejos. */
+  reservaAbreEn?: string;
 }
 
 // Disponibilidad del control de acceso (molinete) para una sede.

@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     maxWidth: 190,
   },
   triggerVisitor: {
-    borderColor: colors.taupe,
+    borderColor: colors.neutral,
   },
   icon: {
     fontSize: 11,
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   visitorBadge: {
-    backgroundColor: colors.taupe,
+    backgroundColor: colors.neutral,
     paddingVertical: 2,
     paddingHorizontal: 6,
     borderRadius: 8,
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
   sheetTitle: {
     fontFamily: fonts.medium,
     fontSize: 9,
-    color: colors.taupeDark,
+    color: colors.neutralDark,
     letterSpacing: 3,
     textTransform: 'uppercase',
     marginBottom: 12,
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   hint: {
     fontFamily: fonts.regular,
     fontSize: 10,
-    color: colors.taupe,
+    color: colors.neutral,
     letterSpacing: 0.5,
   },
 });

@@ -123,6 +123,10 @@ export default function Login() {
               disabled={loading}
               style={styles.submit}
             />
+
+            <Pressable onPress={() => router.push('/forgot')}>
+              <Text style={styles.forgotLink}>¿Olvidaste tu contraseña?</Text>
+            </Pressable>
           </View>
         </View>
       </ScrollView>
@@ -206,5 +210,12 @@ const styles = StyleSheet.create({
   submit: {
     marginTop: 8,
     paddingVertical: 14,
+  },
+  forgotLink: {
+    fontFamily: fonts.medium,
+    fontSize: 12,
+    color: colors.neutralDark,
+    textAlign: 'center',
+    paddingVertical: 4,
   },
 });

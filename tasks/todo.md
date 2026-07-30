@@ -13,12 +13,20 @@ App móvil (Expo/RN) de CLIC. Un solo tema neutro para todas las unidades
 - [x] **Sede por defecto**: default fijado (`clic.defaultSedeId`) que gana en el
       arranque; radio con opción "la última que usé". Solo si hay >1 sede.
 - [x] **Acerca de**: versión (expo-constants) + link a términos/políticas.
-- Futuro (no en v1): apariencia claro/oscuro, idioma, eliminar cuenta.
+- [x] **Eliminar mi cuenta** (Cuenta): confirma contraseña → `DELETE /auth/account`
+      → anonimiza en Clicnet y cierra sesión. Requisito de Google Play. Vía web =
+      email a soporte (`scripts/anonimizar-cuenta.ts`). Ver `docs/publicar-stores.md`.
+- Futuro (no en v1): apariencia claro/oscuro, idioma.
 
-### 2. Resetear contraseña
-- [ ] Flujo de **reset de contraseña** (olvidé mi contraseña) desde login.
-  - Depende de endpoint en Clicnet (`/api/v1/auth/...`) — verificar si existe
-    recuperación por email o hay que sumarlo.
+### 2. Resetear contraseña ✅
+- [x] Flujo de **reset de contraseña** (olvidé mi contraseña) desde login, con
+      **código de 6 dígitos** por email.
+- [x] Backend Clicnet (PR #255, prod): modelo `PasswordResetToken` (sha256, 15min,
+      un solo uso) + `POST /api/v1/auth/forgot` (anti-enumeración, rate-limit
+      3/15min) + `POST /api/v1/auth/reset` (bcrypt, rate-limit 8/15min).
+- [x] App: `forgotPassword`/`resetPassword` en `api/auth.ts`; pantalla `/forgot`
+      de dos pasos (email → código+contraseña); link "¿Olvidaste tu contraseña?"
+      en el login.
 
 ### 3. Login: teclado tapa los inputs ✅
 - [x] `KeyboardAvoidingView` no tenía `behavior` en Android → agregado `'height'`
@@ -35,14 +43,12 @@ App móvil (Expo/RN) de CLIC. Un solo tema neutro para todas las unidades
 - [ ] Pendiente revisar Pressables ad-hoc (qrBtn, pills, filas de menú) — hoy
       tienen chevron `→`, aceptable, pero revisar consistencia global.
 
-### 5. Agenda: aviso de clases aún no habilitadas ✅ (parcial)
+### 5. Agenda: aviso de clases aún no habilitadas ✅
 - [x] Banner informativo debajo del día cuando TODO el día está
-      `FUERA_DE_VENTANA`. Proactivo, sin tener que tocar una clase.
-- [ ] **"en X días" exacto** requiere backend: la API `/api/v1/clases` NO
-      devuelve `sede.diasReservaAnticipada` (lo usa solo server-side). Follow-up
-      chico en Clicnet: agregar ese número (o `reservaAbreEn` ISO por clase) a la
-      respuesta → la app calcula `daysUntil(inicio) - diasReservaAnticipada`.
-      Implica deploy de Clicnet a prod (la app pega a prod).
+      `FUERA_DE_VENTANA`.
+- [x] **"en X días" exacto** — Clicnet expone `reservaAbreEn` en `/api/v1/clases`
+      (PR #254, prod); la app calcula "se habilitan en X días / mañana" con
+      fallback genérico. 
 
 ### 6. Sacar pre-títulos / dar más aire (TODAS las páginas) ✅ (parcial)
 - [x] Componente `PageHeader` único (sin pre-título, título 40px, +aire).
@@ -84,7 +90,7 @@ Ver memoria [[clic-notificaciones-infra-push]] para el mapa de eventos.
       (silueta blanca del iso, transparente) + plugin `expo-notifications.icon`.
       ⚠️ Es config nativa → **se ve recién en el próximo build**. Android solo
       permite silueta monocroma (usa el alfa), no el logo full-color.
-- [ ] Baja de token en logout (quedó para Fase 4).
+- [x] Baja de token en logout (`store/auth.ts` → `unregisterPushToken`).
 
 **Fase 2 — Prefs server + eventos que ya disparan ✅ (deployado a prod, PR #249)**
 - [x] Backend: `NotifPrefs` por alumno + `GET/PUT /api/v1/push/prefs`.
@@ -98,9 +104,8 @@ Ver memoria [[clic-notificaciones-infra-push]] para el mapa de eventos.
       server-side end-to-end ✅)**, vencimiento (contenido ✅). Aprendizajes:
       feriado futuro → aviso diferido al cron (no inmediato); Prisma 7 no conecta
       al proxy de prod desde local (usar pg directo); vencimiento tiene dedup 5d.
-- [ ] Limpieza test: feriado 142 (30/7 Sede Test) quedó con
-      `notificacionEnviada=false` → el cron podría mandar un push duplicado cerca
-      del 30/7. Borrar el feriado o marcarlo si molesta.
+- [x] Limpieza test: feriado 142 (30/7 Sede Test) marcado
+      `notificacionEnviada=true` en prod para evitar el push duplicado del cron.
 
 **Fase 3 — Triggers nuevos ✅ (parcial, deployado a prod, PR #252)**
 - [x] **Novedades**: hook en `crearNovedad()` (con `after()`) → push masivo a
@@ -110,41 +115,40 @@ Ver memoria [[clic-notificaciones-infra-push]] para el mapa de eventos.
 - [~] **Recordatorio de clase**: DESCARTADO por ahora (poco crítico + suma cron/
       scheduler). La columna `NotifPrefs.recordatorioClase` queda por si se retoma.
 
-**Fase 4 — Pulido**
-- [ ] Deep-link al tocar la notificación (lista espera→Agenda, novedad→News,
-      vencimiento→Cuenta).
-- [ ] Limpieza de tokens muertos, baja en logout, dedup de recordatorios.
+**Fase 4 — Pulido ✅ (app-only, sin deploy)**
+- [x] **Deep-link** al tocar la notificación (`src/lib/useNotificationRouting.ts`):
+      lista_espera/clase_cancelada→Agenda, novedad→News, vencimiento→Cuenta.
+- [x] **Baja del token en logout** (`store/auth.ts` → `unregisterPushToken`).
+- [x] Limpieza de tokens muertos → ya estaba en `enviarPushMasivo`.
+- [ ] **Ícono de notificación** — configurado; entra en el próximo `eas build`.
+- Nota: deep-link + logout son JS (se ven por Metro); probar deep-link requiere
+  tocar un push real. El ícono necesita rebuild.
 
 **Decisiones abiertas menores:** lead time del recordatorio (X horas);
 ¿recordatorio push-only o también email?; copy corto por tipo (título/cuerpo).
 
-## Pendientes de la pasada de tema neutro
-- [ ] **Rename semántico** de tokens históricos (`beige`/`taupe` hoy son grises)
-      → roles (`subtle`/`neutral`/…) en los ~29 archivos que consumen `@/theme`.
-- [ ] Neutralizar **`brandText`** (`src/theme/index.ts`): hoy dice "studio
-      pilates" y el login "Bienvenida / Tu espacio de práctica" — atado a Pilates.
-      Def de producto: tagline neutro de CLIC.
+## Cerrados (pasada de tema neutro)
+- [x] **Rename semántico** de tokens: `beige→subtle`, `beigeSoft→subtleSoft`,
+      `taupe→neutral`, `taupeDark→neutralDark` en todo `@/theme` + usos.
+- [x] **`brandText`**: tagline "studio pilates" ya no se muestra; "Bienvenida"→
+      "Bienvenido". Subtítulo "Tu espacio de práctica" se mantiene (decisión).
+- [x] Afordancia Pressables sueltos + pre-títulos de flujos → se dejan como están
+      (chevron OK; los pre-títulos de onboarding son contexto, no navegación).
+
+## Hardening opcional
+- [ ] Restringir la API key de Firebase en Google Cloud (Android + package
+      com.clicestudio.app + SHA-1 del keystore). No es secreto real; el alert de
+      GitHub ya se descartó. Link: console.cloud.google.com/apis/credentials?project=clic-app-b18ed
 
 ## Ideas / más adelante
-- [ ] **Analytics con Firebase** (medir uso → base para vender publicidad).
-  - Base YA lista: `src/lib/analytics.ts` es un no-op con `trackEvent` enchufado
-    en login/logout (store) y reservas/lista-espera (api). Pensado para Firebase.
-  - Usar el **mismo proyecto Firebase** del push (`clic-app-b18ed`, ya hay
-    google-services.json) → sin proveedor nuevo ni costo.
-  - Pasos: (1) `@react-native-firebase/app` + `/analytics` (plugin + **rebuild**);
-    (2) `trackEvent` → `logEvent` (un archivo, call-sites ya existen);
-    (3) screen tracking auto (listener de expo-router → `page_view` por pantalla).
-  - Métricas para el objetivo de ads: **DAU/MAU + retención** (audiencia),
-    **vistas/tiempo por pantalla** (tasar inventario — la Agenda seguro lidera),
-    y cuando haya slots: **impresiones/clicks por slot**.
-  - Ojo: consentimiento/privacidad antes de lanzar ads (políticas de stores).
-  - Alternativa si se quiere más producto: PostHog (funnels/cohortes/self-host).
-- [ ] **Pantalla de preloader/carga** con el logo de CLIC (el iso). Mientras la
-      app bootstrapea (fuentes, token, sede, sesión) hoy muestra `null`/`Loader`
-      genérico. Armar algo de marca — iso centrado, quizás con una animación
-      sutil (reanimated: fade/pulse). Aprovecha la infra de gestos/anim ya
-      montada. Distinto del splash nativo (ese es pre-JS); esto es el estado de
-      carga in-app.
+- [x] **Preloader** con el iso (pulso, reanimated) en el app-open —
+      `src/components/ui/Preloader.tsx`, reemplaza el spinner genérico.
+- [x] **Analytics con Firebase** — código listo (`@react-native-firebase/app`
+      + `/analytics`; `trackEvent`→`logEvent`; screen tracking en el root).
+      Se **activa con el rebuild**. Para el objetivo de ads: mirar DAU/MAU +
+      retención (audiencia) y vistas/tiempo por pantalla (tasar inventario);
+      a futuro, impresiones/clicks por slot. Ojo consentimiento/privacidad
+      antes de lanzar ads. Alternativa: PostHog.
 
 ## Hecho
 - [x] Fix loop de re-render en Agenda (`useReloadOnFocus` con ref).

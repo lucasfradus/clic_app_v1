@@ -26,8 +26,8 @@ export function DarkCard({ style, children, ...rest }: ViewProps) {
       >
         <Defs>
           <RadialGradient id="glow" cx="50%" cy="50%" r="50%">
-            <Stop offset="0%" stopColor={colors.taupe} stopOpacity={0.2} />
-            <Stop offset="65%" stopColor={colors.taupe} stopOpacity={0} />
+            <Stop offset="0%" stopColor={colors.neutral} stopOpacity={0.2} />
+            <Stop offset="65%" stopColor={colors.neutral} stopOpacity={0} />
           </RadialGradient>
         </Defs>
         <Circle cx={150} cy={150} r={150} fill="url(#glow)" />

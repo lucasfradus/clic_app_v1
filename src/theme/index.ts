@@ -3,16 +3,16 @@
 // multi-marca: la identidad la cargan logos/isologos/frases (compartidos); el
 // chrome es gris warm-neutral y el acento es el propio carbón (`ink`). Los
 // colores funcionales (sage/terracotta/amber) NO son de marca: comunican estado.
-// Nota: los nombres de token (beige/taupe) son históricos; hoy son roles de
-// gris. Rename semántico pendiente como limpieza aparte.
+// Tokens por ROL (no por color): la paleta es gris warm-neutral, así que los
+// nombres describen la función, no el matiz.
 
 export const colors = {
   bg: '#f5f4f2', // página — warm-gray, no clínico
   surface: '#ffffff', // tarjetas
-  beige: '#e7e5e1', // relleno sutil (rol: subtle)
-  beigeSoft: '#efedea', // relleno sutil suave (rol: subtleSoft)
-  taupe: '#a6a39e', // gris medio (bordes activos, iconos) (rol: neutral)
-  taupeDark: '#6e6b67', // gris fuerte (labels secundarias) (rol: neutralStrong)
+  subtle: '#e7e5e1', // relleno sutil (bordes de card, rellenos)
+  subtleSoft: '#efedea', // relleno sutil más suave
+  neutral: '#a6a39e', // gris medio (bordes activos, iconos)
+  neutralDark: '#6e6b67', // gris fuerte (labels/subtítulos secundarios)
   ink: '#26282b', // texto principal / superficies oscuras / acento monocromo
   inkSoft: '#53565a',
   inkMute: '#8d9095',

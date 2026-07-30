@@ -104,12 +104,17 @@ export async function apiFetch<T = unknown>(
 
   // Errores
   if (res.status === 401) {
-    clearToken();
-    if (onUnauthorized) onUnauthorized();
-    throw new ApiError(
-      'Tu sesion expiro. Inicia sesion de nuevo.',
-      401
-    );
+    // Solo un request AUTENTICADO puede tener la sesión vencida: ahí sí
+    // limpiamos y avisamos globalmente. En un request sin auth (login/forgot/
+    // reset), un 401 es "credenciales inválidas" y lo maneja el caller — no
+    // hay sesión que expirar.
+    if (auth) {
+      clearToken();
+      if (onUnauthorized) onUnauthorized();
+      throw new ApiError('Tu sesion expiro. Inicia sesion de nuevo.', 401);
+    }
+    const msg = (data && (data.error || data.message)) || 'Credenciales inválidas';
+    throw new ApiError(msg, 401);
   }
   if (res.status === 429) {
     throw new ApiError('Demasiados intentos. Espera unos minutos.', 429);

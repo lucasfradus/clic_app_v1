@@ -5,7 +5,7 @@ import { colors, fonts } from '../../theme';
 export default function Loader({ label = 'Cargando…' }: { label?: string }) {
   return (
     <View style={styles.container}>
-      <ActivityIndicator color={colors.taupe} />
+      <ActivityIndicator color={colors.neutral} />
       <Text style={styles.text}>{label}</Text>
     </View>
   );

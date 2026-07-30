@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   tagLabel: {
     fontFamily: fonts.medium,
     fontSize: 9,
-    color: colors.taupeDark,
+    color: colors.neutralDark,
     letterSpacing: 3,
     textTransform: 'uppercase',
   },

@@ -21,7 +21,7 @@ import { Card } from '@/components/ui/Card';
 import { TagLabel, PageTitle } from '@/components/ui/Text';
 import { Button } from '@/components/ui/Button';
 import { FormBack, Field, Pills } from '@/components/ui/Form';
-import { formatShortDate } from '@/lib/date';
+import { formatShortDate, fromYMD, toYMD } from '@/lib/date';
 import { colors, fonts, radius } from '@/theme';
 
 const SEXOS = [
@@ -155,7 +155,7 @@ export default function EditarPerfil() {
             <DateTimePicker
               value={
                 fechaNacimiento
-                  ? new Date(fechaNacimiento)
+                  ? fromYMD(fechaNacimiento)
                   : new Date(1990, 0, 1)
               }
               mode="date"
@@ -164,7 +164,7 @@ export default function EditarPerfil() {
               onChange={(event, date) => {
                 setShowDatePicker(Platform.OS === 'ios');
                 if (event.type !== 'dismissed' && date) {
-                  setFechaNacimiento(date.toISOString().slice(0, 10));
+                  setFechaNacimiento(toYMD(date));
                 }
               }}
             />

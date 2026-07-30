@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     marginTop: -1,
   },
   tabActive: {
-    borderTopColor: colors.taupe,
+    borderTopColor: colors.neutral,
   },
   labelWrap: {
     flexDirection: 'row',

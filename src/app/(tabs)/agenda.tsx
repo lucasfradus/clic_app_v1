@@ -214,6 +214,23 @@ export default function Agenda() {
     [clasesDelDia]
   );
 
+  // "Se habilitan en X días" a partir de reservaAbreEn (el más temprano del
+  // día). Si el backend no lo manda todavía, cae a un texto genérico.
+  const habilitacionTexto = useMemo(() => {
+    if (!diaFueraDeVentana) return null;
+    const abres = clasesDelDia
+      .map((c) => c.reservaAbreEn)
+      .filter((x): x is string => !!x)
+      .sort();
+    if (abres.length === 0) return 'Se habilitan unos días antes de la fecha.';
+    const dias = Math.ceil(
+      (new Date(abres[0]).getTime() - Date.now()) / 86_400_000
+    );
+    if (dias <= 0) return 'Se habilitan hoy más tarde.';
+    if (dias === 1) return 'Se habilitan mañana.';
+    return `Se habilitan en ${dias} días.`;
+  }, [diaFueraDeVentana, clasesDelDia]);
+
   function handleSalonChange(newId: number | undefined) {
     setSelectedSalonId(newId);
     setSalonSheet(false);
@@ -479,8 +496,8 @@ export default function Agenda() {
       {activa && diaFueraDeVentana && (
         <View style={styles.infoBanner}>
           <Text style={styles.infoBannerText}>
-            Estas clases todavía no están disponibles para anotarse. Se habilitan
-            unos días antes de la fecha.
+            Estas clases todavía no están disponibles para anotarse.{' '}
+            {habilitacionTexto}
           </Text>
         </View>
       )}
@@ -675,9 +692,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    backgroundColor: colors.beigeSoft,
+    backgroundColor: colors.subtleSoft,
     borderWidth: 1,
-    borderColor: colors.beige,
+    borderColor: colors.subtle,
     borderRadius: 12,
     paddingVertical: 12,
     paddingHorizontal: 16,
@@ -687,7 +704,7 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
     borderRadius: 11,
-    backgroundColor: colors.taupe,
+    backgroundColor: colors.neutral,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -735,9 +752,9 @@ const styles = StyleSheet.create({
   },
 
   infoBanner: {
-    backgroundColor: colors.beigeSoft,
+    backgroundColor: colors.subtleSoft,
     borderWidth: 1,
-    borderColor: colors.beige,
+    borderColor: colors.subtle,
     borderRadius: 12,
     paddingVertical: 12,
     paddingHorizontal: 16,
@@ -754,7 +771,7 @@ const styles = StyleSheet.create({
   emptyMsg: {
     fontFamily: fonts.light,
     fontSize: 18,
-    color: colors.taupeDark,
+    color: colors.neutralDark,
     marginTop: 8,
     textAlign: 'center',
   },
@@ -794,7 +811,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.medium,
     fontSize: 9,
     letterSpacing: 2,
-    color: colors.taupeDark,
+    color: colors.neutralDark,
     marginTop: 4,
   },
   classTimePBooked: { color: 'rgba(253, 251, 250, 0.5)' },
@@ -832,7 +849,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 12,
   },
-  sheetItemActive: { backgroundColor: colors.beigeSoft },
+  sheetItemActive: { backgroundColor: colors.subtleSoft },
   sheetItemText: {
     fontFamily: fonts.regular,
     fontSize: 13,

@@ -21,6 +21,7 @@ bloqueantes a resolver antes de subir, y el paso a paso de cada tienda.
 | Package Android / Bundle iOS | `com.clicestudio.app` |
 | Versión actual | `1.0.0` (`appVersionSource: remote`, `autoIncrement` en producción) |
 | Owner Expo / EAS project | `lucasfra` / `7e7c4b25-b893-4afc-894a-ddd0b34a7b2f` |
+| Apple Team ID | `YT24YH8WXT` (enrolado como **Individual**) |
 | Backend | Clicnet (Next.js), prod en `https://app.clicpilates.com/api/v1` |
 | Stack | Expo SDK 57, React Native 0.86, expo-router (typed routes), New Arch, React Compiler |
 | Notificaciones push | Expo Push + FCM (Firebase `clic-app-b18ed`, `google-services.json` en el repo) |
@@ -124,7 +125,7 @@ activar la sección "Families" salvo que se apunte explícitamente a niños.
 
 ---
 
-## 3. Google Play — paso a paso
+## 3. Google Play — paso a paso ✅ PUBLICADA (30-jul-2026)
 
 ### 3.1 Prerrequisitos
 - [ ] Cuenta de **Google Play Console** (pago único US$25). Owner: cuenta de CLIC.
@@ -169,42 +170,201 @@ npx eas-cli build --platform android --profile production
 
 ---
 
-## 4. Apple App Store — paso a paso (fase 2)
+## 4. Apple App Store — EN CURSO (cuenta aprobada 2026-08-28)
 
-### 4.1 Prerrequisitos
-- [ ] **Apple Developer Program** (US$99/año).
-- [ ] Una Mac no es obligatoria (EAS compila en la nube), pero sí la cuenta.
-- [ ] Resolver bloqueante 2.3 (infoPlist) **antes** del build iOS.
+Google Play ya está publicada, así que **todo lo transversal está resuelto y se
+reusa tal cual**: política de privacidad, borrado de cuenta, inventario de datos
+(sección 1), copy de la ficha y usuario demo. Lo que sigue es sólo lo específico
+de Apple.
 
-### 4.2 Push en iOS (Firebase → APNs)
-- [ ] Crear una **APNs Auth Key** (.p8) en el Apple Developer portal.
-- [ ] Cargarla en Firebase (proyecto `clic-app-b18ed` → Cloud Messaging → APNs) y
-      en EAS (`eas credentials` → iOS → Push key). Sin esto, el push no llega en iOS.
+### 4.1 Arreglos de configuración ✅ (rama `feat/publicacion-ios`, 28-ago)
+Tres cosas que iban a romper el primer build de iOS:
 
-### 4.3 Build iOS
+- **Ícono**: `ios.icon` apuntaba a `assets/expo.icon`, que era el **placeholder de
+  Expo** (símbolo de Expo con gradiente azul) — habría salido así en el App Store.
+  Ahora apunta a `./assets/images/icon.png` (1024×1024, el mismo iso que Android).
+  El directorio `assets/expo.icon` se borró.
+- **`ITSAppUsesNonExemptEncryption: false`** en el `infoPlist`: la app sólo usa
+  HTTPS estándar. Sin esta clave, App Store Connect pregunta por export compliance
+  en **cada** subida a TestFlight.
+- **`ios.googleServicesFile`** declarado. ⚠️ **Falta el archivo**: hay que agregar
+  una app iOS (bundle `com.clicestudio.app`) al proyecto Firebase `clic-app-b18ed`
+  y bajar el `GoogleService-Info.plist` a la raíz del repo. Sin él,
+  `@react-native-firebase` falla el prebuild. Está gitignoreado (igual que su par
+  de Android, que sí se trackea).
+
+### 4.2 Paso 0 — `GoogleService-Info.plist` (único bloqueante de código)
+1. [Firebase Console](https://console.firebase.google.com) → proyecto
+   **`clic-app-b18ed`** → ⚙️ *Configuración del proyecto* → *Tus apps* →
+   **Agregar app** → **iOS**.
+2. *ID del paquete*: **`com.clicestudio.app`** (exacto, igual que Android).
+   Apodo: "CLIC iOS". El App Store ID se deja vacío.
+3. **Descargar `GoogleService-Info.plist`** → dejarlo en la **raíz** de
+   `clic_app_v1`, al lado de `google-services.json`.
+4. **Ignorar el resto del asistente** (pods, `AppDelegate`, código de init): el
+   config plugin de Expo hace todo eso en el build. Con bajar el archivo alcanza.
+
+⚠️ El plist **se commitea**, igual que `google-services.json`. EAS Build sólo sube
+al builder los archivos **trackeados por git**: con el plist ignorado el build corta
+con *"File specified via `ios.googleServicesFile` is not checked in to your repository
+and won't be uploaded to the builder"*. No es un secreto — es config de cliente que
+viaja dentro del binario. El secreto de Firebase es la clave de cuenta de servicio
+(`*-firebase-adminsdk-*.json`), que sigue ignorada.
+
+### 4.2.b `expo-build-properties` — lo que hizo fallar los dos primeros builds
+
+Los primeros builds de iOS murieron en la fase **Install pods**. EAS sólo reporta
+`UNKNOWN_ERROR`; el error de verdad está en el log (ver 4.2.c para bajarlo):
+
+```
+[!] The 'Pods-CLIC' target has transitive dependencies that include statically
+    linked binaries: (.../FirebaseAnalytics.xcframework)
+```
+
+Dos cosas, en este orden:
+
+1. El proyecto **no tenía `expo-build-properties`**, que es donde se declara el
+   linkeo de frameworks en iOS. `@react-native-firebase` lo exige. Android nunca
+   lo pidió, por eso el problema apareció recién en el primer build de iOS.
+2. Con `useFrameworks: "dynamic"` **vuelve a fallar**: `FirebaseAnalytics` se
+   distribuye como **binario estático** y CocoaPods se niega a mezclarlo con
+   frameworks dinámicos. La doc de react-native-firebase recomienda `dynamic`
+   para React Native 0.75+ *cuando se usa Swift Package Manager*; este proyecto
+   compila Firebase por **CocoaPods**, así que corresponde `static`.
+
+Config que quedó:
+```json
+["expo-build-properties", { "ios": { "useFrameworks": "static" } }]
+```
+
+`disableSPM` (que la doc menciona junto a `static`) **no existe** en el plugin de
+`@react-native-firebase/app@25.1.0` instalado — es de una versión posterior. No
+hizo falta.
+
+### 4.2.c Cómo leer el log real de un build fallido
+
+La página de expo.dev pide login, pero el log sale por CLI. El campo `logFiles`
+trae una URL firmada (válida ~15 min) y el archivo viene **gzipeado**:
+
+```bash
+npx eas-cli build:list --platform ios --limit 1 --non-interactive --json
+# copiar logFiles[0] y:
+curl -s --compressed "<url>" -o build.log
+```
+
+Es JSON por línea; cada entrada tiene `phase` (`INSTALL_PODS`, `RUN_FASTLANE`, …)
+y `msg`. Filtrar por la fase que falló y mirar las últimas líneas.
+
+**Pendiente aparte (no bloqueaba el build):** hay 16 dependencias desalineadas del
+SDK (`expo@57.0.8` vs `~57.0.18`, `react-native@0.86.0` vs `0.86.3`, etc.).
+Alinearlas con `npx expo install --fix` en un cambio propio, no mezclado con la
+publicación, y volver a probar Android además de iOS.
+
+### 4.3 Paso 1 — Primer build de iOS
+Conviene hacerlo **antes** de crear el app record: EAS registra solo el App ID en
+el Developer Portal y así después aparece en la lista desplegable de ASC.
+
 ```bash
 npx eas-cli build --platform ios --profile production
 ```
-- EAS gestiona certificados y provisioning (login con la Apple ID del programa).
-- Genera un `.ipa` firmado.
+⚠️ **Lo tiene que correr una persona.** El primer build pide login con la Apple ID
+y el **código de doble factor**, así que en modo no interactivo falla con
+*"Credentials are not set up. Run this command again in interactive mode"*. Una vez
+creadas las credenciales en EAS, los builds siguientes ya salen sin intervención.
 
-### 4.4 App Store Connect
-- [ ] Crear el **app record** (bundle `com.clicestudio.app`).
-- [ ] **Capturas**: 6.7" (iPhone 15/16 Pro Max) obligatoria; 6.5" recomendada; si
-      soporta iPad, sumar las de iPad. Mismas pantallas que Android.
-- [ ] **App Privacy** (nutrition labels) → cargar según sección 1.
-- [ ] **URL de privacidad** (2.1). Descripción, keywords, categoría *Health & Fitness*.
-- [ ] **App Review**: usuario demo (2.4) + notas explicando el login y el flujo de
-      tutor para menores.
+**Alternativa sin 2FA** (sirve si la contraseña de Apple no entra en la terminal, y
+es además el modo en que se puede automatizar): crear primero la App Store Connect
+API Key (paso 4.5) y exportar estas cuatro variables antes de correr el build —
+EAS gestiona los certificados con la key, sin pedir usuario ni código:
 
-### 4.5 Envío
-- [ ] Subir con `eas submit --platform ios` (usa una **App Store Connect API Key**).
-- [ ] Enviar a revisión desde App Store Connect. Apple es más estricto: revisar
-      que no haya red-boxes, que los permisos tengan textos claros, y que el
-      contenido de pago (si se muestran precios/planes) no requiera IAP —
-      **los pagos son externos (Mercado Pago, servicio real fuera de la app)**, lo
-      cual Apple permite para bienes/servicios físicos (clases presenciales), pero
-      conviene aclararlo en las notas de revisión.
+```bash
+export EXPO_ASC_API_KEY_PATH="/ruta/a/AuthKey_XXXXXXXX.p8"
+export EXPO_ASC_KEY_ID="XXXXXXXX"
+export EXPO_ASC_ISSUER_ID="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+export EXPO_APPLE_TEAM_ID="YT24YH8WXT"
+```
+
+Lo que pasa en el camino:
+- Pide login con la **Apple ID del Developer Program** (una sola vez; queda en EAS).
+- Crea solo, sin intervención: el **App Identifier**, el *Distribution
+  Certificate*, el *Provisioning Profile* y — cuando pregunta *"Setup Push
+  Notifications for your project?"* → **responder que sí** — la **APNs Key**.
+  No hace falta ir al portal de Apple a crear la .p8 de push a mano.
+- **No** hace falta registrar el UDID del iPhone: eso aplica sólo a builds
+  ad-hoc / *internal distribution*. Un build de producción se instala por
+  TestFlight.
+- Tarda ~15-25 min entre cola y compilación.
+
+### 4.4 Paso 2 — Crear el app record en App Store Connect
+[App Store Connect](https://appstoreconnect.apple.com) → *Apps* → **+** → *Nueva app*:
+- **Plataforma**: iOS
+- **Nombre**: `CLIC` (máx. 30 caracteres; es **único global** en todo el App Store)
+- **Idioma principal**: Español (no existe variante rioplatense; usar España o México)
+- **ID del paquete**: `com.clicestudio.app` (aparece en la lista si ya corrió el build)
+- **SKU**: identificador interno libre, ej. `clic-app-001`
+- **Acceso de usuario**: acceso completo
+
+Después, en *App Information*, anotar el **Apple ID numérico** de la app: es el
+`ascAppId` que va en `eas.json`.
+
+> **Contratos**: la app es **gratuita**, así que alcanza con el *Apple Developer
+> Program License Agreement* (se acepta al entrar por primera vez). El *Paid
+> Applications Agreement* y los datos fiscales/bancarios **no hacen falta**
+> porque no se cobra nada dentro de la app. Si al entrar a ASC aparece un banner
+> de términos pendientes, aceptarlo antes de seguir.
+
+### 4.5 Paso 3 — App Store Connect API Key (para `eas submit`)
+[Users and Access](https://appstoreconnect.apple.com/access/users) → pestaña
+**Integrations** → *App Store Connect API* → **+** al lado de "Active":
+- Nombre: `EAS Submit` · **Acceso: `Admin`**
+- **Descargar el `.p8`** — ⚠️ **se puede descargar una sola vez**. Guardarlo fuera
+  del repo (no commitear).
+- Anotar el **Key ID** y el **Issuer ID** (los muestra el mismo portal).
+
+### 4.6 Paso 4 — Subir a TestFlight
+```bash
+npx eas-cli submit --platform ios --latest
+```
+Fijar el `ascAppId` en `eas.json` para no tener que elegirlo cada vez:
+```json
+"submit": { "production": { "ios": { "ascAppId": "<Apple ID numérico>" } } }
+```
+
+### 4.7 Paso 5 — Humo en el iPhone
+Instalar **TestFlight** desde el App Store y entrar con la misma Apple ID.
+El export compliance ya no pregunta nada (`ITSAppUsesNonExemptEncryption`).
+Probar, en este orden:
+- [ ] Login + "olvidé mi contraseña" (código de 6 dígitos por email)
+- [ ] Agenda: reservar y cancelar
+- [ ] Credencial / QR
+- [ ] Foto de perfil → **permiso de cámara y de fotos** (que aparezcan los textos
+      en castellano del `infoPlist`)
+- [ ] **Push real** — es lo único de la app que nunca se probó en iOS. Disparar
+      uno desde Clicnet y verificar que llega y que el **deep-link** abre la
+      pantalla correcta.
+
+### 4.8 Paso 6 — Capturas y ficha
+- **Capturas**: sacarlas del iPhone (botón lateral + subir volumen) con la app de
+  TestFlight. Guardarlas crudas en `store-assets/capturas-crudas-ios/`; el
+  enmarcado a la resolución exacta que pide Apple (**6.9"**: 1290×2796 o
+  1320×2868) se genera con `sharp`, igual que se hizo para Play. **No** hacen
+  falta capturas de iPad: `supportsTablet` está desactivado → app iPhone-only.
+- **Textos**: reusar `docs/play-store-ficha.md`. Apple pide además un **subtítulo**
+  (30 caracteres) y **keywords** (100, separadas por coma) que Play no tiene.
+- **App Privacy**: mapear la tabla de la sección 1. No omitir el **dato de salud**
+  ni marcar el analytics como *linked to the user*.
+- **Age rating**, **Pricing: Free**, y **URL de privacidad**
+  (`https://www.clicpilates.com/politicas`).
+- **Notas para App Review**: credenciales del usuario demo + aclarar que el login
+  es obligatorio, que la autorización de menores la completa un tutor, y que los
+  pagos ocurren **fuera de la app** (Mercado Pago) por tratarse de clases
+  presenciales — servicios físicos, exentos de IAP. La app no tiene ningún flujo
+  de compra: sólo muestra el estado de cuenta.
+
+### 4.9 Paso 7 — Envío
+*Submit for Review*. La primera revisión suele tardar entre 24 h y unos días.
+Rechazos típicos para una app así: faltan credenciales demo, capturas que no
+matchean la app real, o privacy labels incompletos.
 
 ---
 
@@ -259,12 +419,20 @@ npx eas-cli submit --platform ios       # requiere App Store Connect API Key
 npx eas-cli update --branch production --message "fix ..."
 ```
 
-### Estado actual (2026-07-29)
+### Estado actual (2026-08-28)
+- **Google Play: PUBLICADA.** El AAB de producción (1.0.0, build 2) se subió el
+  30-jul y la app está viva. Todos los cuestionarios (Data safety, Data deletion,
+  App access, Content rating) quedaron completados.
+- **App Store: arrancando.** Cuenta del Apple Developer Program **aprobada el
+  28-ago**. Todavía no hay ningún build de iOS (`eas build:list` sólo muestra
+  Android). Los tres arreglos de config están hechos en la rama
+  `feat/publicacion-ios` (ver 4.1); el resto son tareas en la cuenta Apple (4.2).
+- **Único bloqueante de código para el primer build iOS:** falta el
+  `GoogleService-Info.plist` de Firebase (4.1).
+- Bloqueantes transversales de la sección 2: **todos resueltos**. La política de
+  privacidad está viva en `https://www.clicpilates.com/politicas`.
+
+### Estado anterior (2026-07-29)
 - App **feature-complete** y probada end-to-end (incl. reset de contraseña).
-- Corriendo un **dev-build** de Android (perfil development) para validar en
-  device el ícono de notificación, Firebase Analytics y el módulo nativo.
-- **Bloqueantes de la sección 2:** 2.2 (borrado de cuenta) y 2.3 (infoPlist iOS)
-  **hechos**; 2.1 (política de privacidad) tiene el borrador listo, falta
-  hostearla. Quedan tareas **operativas, no de código**: hostear la política,
-  definir el email de bajas, y completar los cuestionarios de Play Console
-  (Data safety, Data deletion, App access con usuario demo).
+- Bloqueantes 2.2 (borrado de cuenta) y 2.3 (infoPlist iOS) hechos; 2.1 (política
+  de privacidad) con el borrador listo, faltaba hostearla.

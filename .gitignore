@@ -43,9 +43,8 @@ example
 /android
 
 # Firebase — SOLO la clave de cuenta de servicio es secreta (NUNCA commitear).
-# google-services.json es config de cliente (va en la app) y SÍ se trackea,
-# porque EAS Build solo sube archivos trackeados por git.
-GoogleService-Info.plist
+# google-services.json y GoogleService-Info.plist son config de cliente (van dentro
+# de la app) y SÍ se trackean, porque EAS Build solo sube archivos trackeados por git.
 *-firebase-adminsdk-*.json
 
 # Arte fuente del logo (los assets derivados viven en src/assets/clic/)

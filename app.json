@@ -9,11 +9,13 @@
     "userInterfaceStyle": "light",
     "ios": {
       "bundleIdentifier": "com.clicestudio.app",
-      "icon": "./assets/expo.icon",
+      "icon": "./assets/images/icon.png",
       "infoPlist": {
         "NSCameraUsageDescription": "CLIC usa la cámara para tu foto de perfil y la foto del documento del tutor en la autorización de menores.",
-        "NSPhotoLibraryUsageDescription": "CLIC accede a tus fotos para elegir tu foto de perfil o el documento del tutor."
-      }
+        "NSPhotoLibraryUsageDescription": "CLIC accede a tus fotos para elegir tu foto de perfil o el documento del tutor.",
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "package": "com.clicestudio.app",
@@ -49,7 +51,15 @@
         }
       ],
       "@react-native-firebase/app",
-      "@react-native-firebase/analytics"
+      "@react-native-firebase/analytics",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

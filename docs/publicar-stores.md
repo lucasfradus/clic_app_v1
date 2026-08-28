@@ -321,14 +321,40 @@ Después, en *App Information*, anotar el **Apple ID numérico** de la app: es e
   del repo (no commitear).
 - Anotar el **Key ID** y el **Issuer ID** (los muestra el mismo portal).
 
-### 4.6 Paso 4 — Subir a TestFlight
-```bash
-npx eas-cli submit --platform ios --latest
-```
-Fijar el `ascAppId` en `eas.json` para no tener que elegirlo cada vez:
+### 4.6 Paso 4 — Subir a TestFlight ✅ (primer submit: 28-ago)
+
+Las credenciales del **submit** NO son las mismas variables que las del build.
+`EXPO_ASC_*` sirve para que EAS gestione certificados durante el build, pero
+`eas submit` las lee de `eas.json` → `submit.production.ios`. Con sólo las
+variables de entorno corta con *"App Store Connect API Keys cannot be set up in
+--non-interactive mode"*.
+
+Para no meter la clave ni su ruta en el repo, `eas.json` usa **interpolación de
+variables de entorno** (`$VAR`), que EAS resuelve al ejecutar:
+
 ```json
-"submit": { "production": { "ios": { "ascAppId": "<Apple ID numérico>" } } }
+"submit": { "production": { "ios": {
+  "ascAppId": "6806391392",
+  "ascApiKeyPath": "$ASC_API_KEY_PATH",
+  "ascApiKeyId": "$ASC_API_KEY_ID",
+  "ascApiKeyIssuerId": "$ASC_API_KEY_ISSUER_ID"
+} } }
 ```
+
+```bash
+export ASC_API_KEY_PATH="C:/Users/lucas/.appstore/AuthKey_XXXXXXXXXX.p8"
+export ASC_API_KEY_ID="XXXXXXXXXX"          # sale del nombre del archivo
+export ASC_API_KEY_ISSUER_ID="<uuid>"       # ASC → Users and Access → Integrations
+npx eas-cli submit --platform ios --latest --non-interactive
+```
+
+⚠️ **La key `.p8` se descarga una sola vez.** Está fuera del repo, en
+`C:Userslucas.appstore`. Si se pierde, hay que revocarla y generar otra.
+`.gitignore` ya cubre `*.p8`, pero igual no conviene dejarla dentro del repo:
+EAS Build sube al builder todo lo que git no ignore.
+
+Después del submit, Apple **procesa** el binario 5-10 min y avisa por mail. Recién
+ahí aparece en TestFlight.
 
 ### 4.7 Paso 5 — Humo en el iPhone
 Instalar **TestFlight** desde el App Store y entrar con la misma Apple ID.

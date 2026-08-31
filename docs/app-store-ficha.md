@@ -98,9 +98,47 @@ ACCOUNT DELETION: Profile > Configuración > Eliminar mi cuenta. Members can als
 request deletion by writing to info@clicpilates.com.
 ```
 
-**App Access (usuario demo):** el mismo que se cargó en Google Play. Tiene que
-tener sede asignada, plan activo y alguna reserva visible para que el revisor vea
-la app con datos.
+---
+
+## App Access — cómo crear el usuario del revisor
+
+La app es 100% login-gated: sin credenciales que funcionen, Apple rechaza sin
+siquiera mirar la app. **No hace falta tocar la base ni leer la casilla de mail.**
+
+**Cuenta:** `revisor@clicpilates.com` · **Sede:** una sede real con clases (para
+que la agenda se vea con datos) · **Plan:** uno de modalidad `PACK`.
+
+### Pasos (todo desde el backoffice, salvo el 3)
+
+1. **Alumnos → Nuevo.**
+   - Nombre/Apellido: `Apple Reviewer`.
+   - **Fecha de nacimiento de adulto** ← es lo que evita el flujo de
+     autorización de menores. La regla es
+     `requiereAutorizacionMenor(fechaNacimiento, sede.autorizacionMenoresActiva)`:
+     con un adulto, `autorizacionMenoresRequerido` da `false` y el gate no
+     aparece.
+   - DNI obligatorio (7 u 8 dígitos), y una sola sede.
+   - El alta crea el `Usuario` con la clave temporal **`Clic2025`** y
+     `debeCambiarClave: true`. La **app móvil ignora ese flag** (sólo lo devuelve
+     la API en `/auth`), así que el revisor entra sin que nada lo fuerce a
+     cambiarla.
+
+2. **Cobrarle un plan `PACK`** en esa sede. Que **no** sea plan de prueba
+   (`esPrueba: true` dispara seguimientos). Queda con `Suscripcion` en estado
+   `ACTIVA` y accesos disponibles.
+
+3. **Firmar el consentimiento** — esto no se puede hacer desde el backoffice, es
+   un gate de la app (`consentimientoRequerido: !!alumno.sede?.consentimiento`).
+   Entrar una vez con ese usuario **desde Android** (no hace falta el iPhone) y
+   firmarlo. Aprovechar para:
+   - **reservar una clase futura**, así el revisor ve la agenda con datos;
+   - **cambiar la clave** por una propia en vez de la genérica `Clic2025`.
+
+4. **Cargarlo en ASC** → *App Review Information* → *Sign-In Required*: email y
+   contraseña.
+
+⚠️ Al estar en una sede real con suscripción vigente, **cuenta como socio activo**
+en los reportes de esa sede. Darlo de baja cuando la app esté aprobada.
 
 ---
 

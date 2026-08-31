@@ -12,15 +12,12 @@ TestFlight con `processingState: VALID`** y la versión 1.0 está en
 Paso a paso en `docs/publicar-stores.md` §4. Copy listo en `docs/app-store-ficha.md`.
 
 ### 0. Decisiones (destraban el resto)
-- [ ] **Nombre**: la app en ASC quedó como **"Clic Fitness"**, no "CLIC". Si se
-      deja así hay que ajustar `docs/app-store-ficha.md`: hoy dice `CLIC` y las
-      keywords incluyen `fitness`, que Apple ya indexa por el nombre (8 caracteres
-      desperdiciados de 100). Se puede renombrar mientras esté en
-      `PREPARE_FOR_SUBMISSION`.
-- [ ] **Pushear `feat/publicacion-ios`**: son 4 commits que existen sólo en la
-      máquina de Lucas (arreglos del build iOS, las dos fichas, config del submit).
+- [x] **Nombre**: queda **"Clic Fitness"** — "CLIC" a secas ya estaba registrado
+      por otro desarrollador y el nombre es único global. Ficha ajustada (salió
+      `fitness` de las keywords, que Apple ya indexa por el nombre).
+- [x] **Rama `feat/publicacion-ios` pusheada** a origin.
 
-### 1. Humo en TestFlight — **Lucas**, ~20 min
+### 1. Humo en TestFlight — **Lucas**, ~20 min ⏸️ sin iPhone a mano (31-ago)
 - [ ] Instalar **TestFlight** en el iPhone, entrar con la Apple ID del programa e
       instalar el build 8 (grupo interno "Team (Expo)").
 - [ ] Login + "olvidé mi contraseña" (código de 6 dígitos por email).
@@ -42,6 +39,25 @@ Paso a paso en `docs/publicar-stores.md` §4. Copy listo en `docs/app-store-fich
 Las capturas de Play son 1080×1920 y **no sirven**. No hacen falta capturas de
 iPad: `supportsTablet` está desactivado → app iPhone-only.
 
+### 2.b Usuario del revisor — **Lucas** (decidido 31-ago)
+
+Procedimiento completo en `docs/app-store-ficha.md` → "App Access". Resumen:
+
+- Cuenta **`revisor@clicpilates.com`**, en una **sede real con clases** (para que
+  la agenda se vea con datos), con un plan de modalidad **`PACK`** que no sea de
+  prueba.
+- [ ] Alta en el backoffice con **fecha de nacimiento de adulto** (evita el gate
+      de autorización de menores). Queda con la clave temporal `Clic2025`; la app
+      no fuerza cambiarla.
+- [ ] Cobrarle el plan PACK.
+- [ ] Entrar **desde Android** con esa cuenta: firmar el consentimiento (es un
+      gate de la app, no se puede desde el backoffice), reservar una clase futura
+      y cambiar la clave por una propia.
+- [ ] Cargar email + clave en ASC → *App Review Information*.
+- [ ] ⚠️ Al quedar en una sede real con suscripción vigente **cuenta como socio
+      activo** en los reportes de esa sede: darlo de baja cuando la app esté
+      aprobada.
+
 ### 3. Cargar la ficha en App Store Connect — **Lucas**
 Todo el contenido está en `docs/app-store-ficha.md`, listo para copiar y pegar.
 - [ ] Subtítulo, keywords, descripción y texto promocional.
@@ -51,8 +67,7 @@ Todo el contenido está en `docs/app-store-ficha.md`, listo para copiar y pegar.
 - [ ] **Age rating**, **Precio: Free**, URL de soporte y de privacidad.
 - [ ] **App Review**: pegar las notas en inglés del doc (explican los pagos fuera
       de la app y el flujo de autorización de menores).
-- [ ] **App Access**: cargar el usuario demo con sede, plan activo y una reserva.
-      ⚠️ Verificar que el que se usó en Google Play siga funcionando.
+- [ ] **App Access**: el usuario del revisor (ver 2.b).
 - [ ] Confirmar en *Business → Agreements* que no haya contratos pendientes.
 
 ### 4. Enviar a revisión — **Lucas**

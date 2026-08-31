@@ -8,7 +8,9 @@ Google no**. Paso a paso de la publicación en `docs/publicar-stores.md` §4.
 
 ## Textos propios de App Store
 
-**Nombre:** `CLIC` (máx. 30)
+**Nombre:** `Clic Fitness` (12/30) — "CLIC" a secas ya estaba registrado por otro
+desarrollador en el App Store. El nombre es único global y no hay forma de
+reclamarlo.
 
 **Subtítulo** (máx. 30 caracteres — se indexa para búsqueda):
 ```
@@ -16,9 +18,10 @@ Reservá clases en tu estudio
 ```
 
 **Keywords** (máx. 100 caracteres, separadas por coma, **sin espacios**). No repetir
-palabras del nombre ni del subtítulo: Apple ya las indexa y se desperdician:
+palabras del nombre ni del subtítulo: Apple ya las indexa y se desperdician. Por eso
+`fitness` **no** va acá — ya está en el nombre — y se reemplazó por `musculacion`:
 ```
-pilates,gimnasio,fitness,turnos,socios,entrenamiento,agenda,credencial,wellness,hot,studio,cuota
+pilates,gimnasio,turnos,socios,entrenamiento,agenda,credencial,wellness,hot,cuota,musculacion
 ```
 
 **Descripción:** reusar la descripción completa de `play-store-ficha.md` tal cual.

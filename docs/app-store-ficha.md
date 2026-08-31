@@ -153,3 +153,49 @@ Home · Agenda · Cuenta · Novedades · Credencial/QR.
 Las capturas de Play son 1080×1920 y **no sirven**. Sacar las crudas del iPhone
 con la build de TestFlight, guardarlas en `store-assets/capturas-crudas-ios/` y
 reenmarcarlas con `sharp` a la resolución de Apple.
+
+---
+
+## Dónde va cada cosa en App Store Connect
+
+ASC reparte la ficha en **cuatro pantallas distintas**, y no es obvio cuál es cuál.
+Entrando a la app (`Clic Fitness`, id `6806391392`), en el menú de la izquierda:
+
+### 1. `App Information` — datos que no cambian por versión
+| Campo | De dónde sale |
+|---|---|
+| **Name** | `Clic Fitness` |
+| **Subtitle** | el subtítulo de este doc (28/30) |
+| **Category** | Primary: *Health & Fitness* |
+| **Privacy Policy URL** | `https://www.clicpilates.com/politicas` |
+| **Age Rating** → *Edit* | cuestionario; mismo criterio que el IARC de Play |
+| **Content Rights** | no usa contenido de terceros |
+
+### 2. `Pricing and Availability`
+- **Price:** Free · **Availability:** todos los países (o sólo Argentina, si se
+  prefiere acotar).
+
+### 3. `App Privacy` — los nutrition labels
+- Es una pantalla **propia**, no está dentro de la versión. Se carga una vez y
+  aplica a toda la app.
+- Usar la tabla de este doc. Empieza en *Data Collection* → "Yes, we collect data".
+- **Tracking: No** (sin ads, Firebase Analytics no usa IDFA) → la app no necesita ATT.
+
+### 4. `iOS App → 1.0 Prepare for Submission` — lo de esta versión
+| Sección | Qué cargar |
+|---|---|
+| **App Previews and Screenshots** | las capturas 6.9" (1290×2796) |
+| **Promotional Text** | el de este doc (editable sin nueva versión) |
+| **Description** | la descripción completa de `play-store-ficha.md` |
+| **Keywords** | las de este doc (93/100) |
+| **Support URL** | `https://www.clicpilates.com` |
+| **Build** | botón **+** → elegir el **build 8** |
+| **App Review Information** | ✔ *Sign-in required* → email y clave del revisor, más las **Notes** en inglés de este doc |
+| **Version Release** | *Manually release* conviene: la app sale cuando vos querés, no apenas la aprueban |
+
+### 5. Enviar
+Botón **Add for Review** / **Submit for Review**, arriba a la derecha de la
+pantalla de la versión. Si algo obligatorio falta, ASC lo marca en rojo ahí mismo.
+
+**Orden sugerido:** 1 → 2 → 3 primero (son de la app y quedan hechas para
+siempre), y la 4 al final, cuando estén las capturas.

@@ -58,18 +58,32 @@ Procedimiento completo en `docs/app-store-ficha.md` → "App Access". Resumen:
       activo** en los reportes de esa sede: darlo de baja cuando la app esté
       aprobada.
 
-### 3. Cargar la ficha en App Store Connect — **Lucas**
-Todo el contenido está en `docs/app-store-ficha.md`, listo para copiar y pegar.
-- [ ] Subtítulo, keywords, descripción y texto promocional.
-- [ ] Subir las capturas 6.9".
-- [ ] **App Privacy** (nutrition labels) → usar la tabla del doc. Ojo: tracking =
-      **NO**, y por eso la app no necesita el prompt de ATT.
-- [ ] **Age rating**, **Precio: Free**, URL de soporte y de privacidad.
-- [ ] **App Review**: pegar las notas en inglés del doc (explican los pagos fuera
-      de la app y el flujo de autorización de menores).
-- [ ] **App Access**: el usuario del revisor (ver 2.b).
-- [ ] Confirmar en *Business → Agreements* que no haya contratos pendientes.
+### 3. Ficha en App Store Connect — ✅ cargada por API (31-ago)
 
+Se cargó con la App Store Connect API (key Admin en `C:Userslucas.appstore`),
+leyendo los textos de `docs/app-store-ficha.md` para que no diverjan. Verificado
+releyendo de Apple:
+
+- [x] **Subtítulo** `Reservá clases en tu estudio` (28/30)
+- [x] **URL de privacidad** → va en la pantalla **App Privacy**, no en
+      *App Information*, aunque la API la exponga en `appInfoLocalizations`.
+- [x] **Descripción** (948/4000), **keywords** (93/100), **texto promocional**,
+      **support URL**.
+- [x] **App Review Information**: notas en inglés + usuario demo
+      `revisor@clicpilates.com` / `Clic2025`. Contacto declarado: Lucas Fradusco,
+      +541121566704, info@clicpilates.com — **cambiarlo si se prefiere otro**.
+- [x] **Release: MANUAL** — la app sale cuando se aprieta el botón, no apenas
+      Apple apruebe.
+- [x] Ya estaban de antes: nombre `Clic Fitness`, categoría *Health & Fitness* y
+      el **age rating** declarado.
+
+**Falta en esta pantalla:**
+- [ ] **App Privacy (nutrition labels)** — ⚠️ no se pudo verificar por API (los
+      endpoints `appDataUsages` devuelven 404): **revisar a mano en la web**. La
+      tabla con el mapeo está en `docs/app-store-ficha.md`.
+- [ ] **Capturas 6.9"** (0 cargadas) — bloqueado por el iPhone.
+- [ ] **Asociar el build** a la versión 1.0 (hoy no tiene ninguno). Conviene
+      hacerlo al final, después del humo: si el humo falla habrá un build nuevo.
 ### 4. Enviar a revisión — **Lucas**
 - [ ] En la versión 1.0, seleccionar el **build 8**.
 - [ ] *Submit for Review*. La primera revisión tarda entre 24 h y unos días.

@@ -167,8 +167,10 @@ Entrando a la app (`Clic Fitness`, id `6806391392`), en el menú de la izquierda
 | **Name** | `Clic Fitness` |
 | **Subtitle** | el subtítulo de este doc (28/30) |
 | **Category** | Primary: *Health & Fitness* |
-| **Privacy Policy URL** | `https://www.clicpilates.com/politicas` |
 | **Age Rating** → *Edit* | cuestionario; mismo criterio que el IARC de Play |
+
+⚠️ La **URL de privacidad NO se carga acá**, aunque internamente el dato pertenezca
+al `appInfo`. La UI la pone en la pantalla **App Privacy** (ver punto 3).
 | **Content Rights** | no usa contenido de terceros |
 
 ### 2. `Pricing and Availability`
@@ -178,7 +180,11 @@ Entrando a la app (`Clic Fitness`, id `6806391392`), en el menú de la izquierda
 ### 3. `App Privacy` — los nutrition labels
 - Es una pantalla **propia**, no está dentro de la versión. Se carga una vez y
   aplica a toda la app.
-- Usar la tabla de este doc. Empieza en *Data Collection* → "Yes, we collect data".
+- **Privacy Policy URL** → arriba de todo, bloque *Privacy Policy* con su propio
+  botón *Edit*: `https://www.clicpilates.com/politicas`. Es acá y no en
+  *App Information*, que es donde uno la busca primero.
+- Los labels: usar la tabla de este doc. Empieza en *Data Collection* → "Yes, we
+  collect data".
 - **Tracking: No** (sin ads, Firebase Analytics no usa IDFA) → la app no necesita ATT.
 
 ### 4. `iOS App → 1.0 Prepare for Submission` — lo de esta versión

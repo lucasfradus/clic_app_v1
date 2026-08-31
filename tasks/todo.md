@@ -17,17 +17,25 @@ Paso a paso en `docs/publicar-stores.md` §4. Copy listo en `docs/app-store-fich
       `fitness` de las keywords, que Apple ya indexa por el nombre).
 - [x] **Rama `feat/publicacion-ios` pusheada** a origin.
 
-### 1. Humo en TestFlight — **Lucas**, ~20 min ⏸️ sin iPhone a mano (31-ago)
-- [ ] Instalar **TestFlight** en el iPhone, entrar con la Apple ID del programa e
-      instalar el build 8 (grupo interno "Team (Expo)").
-- [ ] Login + "olvidé mi contraseña" (código de 6 dígitos por email).
-- [ ] Agenda: reservar y cancelar.
-- [ ] Credencial / QR.
-- [ ] Foto de perfil → que los permisos de **cámara** y **fotos** muestren los
-      textos en castellano del `infoPlist`.
-- [ ] **Push** ← lo más importante: nunca corrió en iOS. Que llegue y que al
-      tocarlo el deep-link abra la pantalla correcta.
-- [ ] Reportar lo que falle antes de seguir con la ficha.
+### 1. Humo en TestFlight — ✅ HECHO (31-ago)
+
+Probado en iPhone con la cuenta del revisor. Anduvo todo: login, agenda,
+cuenta, novedades, credencial y los permisos de cámara/fotos con los textos en
+castellano.
+
+**El push funciona en iOS** — era lo único que nunca había corrido en esa
+plataforma. Se probaron los 4 tipos mandándolos directo a la Expo Push API con
+el token de ese iPhone (los hooks reales habrían notificado a todos los socios
+de la sede). Llegaron los 4 y el deep-link abrió la pantalla correcta en cada
+caso:  y  → Agenda,  → Novedades,
+ → Cuenta.
+
+Nota: el token Android de ese alumno era el teléfono de Lucas, reasignado al
+loguearse con la cuenta del revisor ( es  por
+dispositivo, así que un teléfono sirve a una sola cuenta a la vez).
+
+- [x] **Build 8 asociado a la versión 1.0** (se hizo después del humo, ya sin
+      riesgo de tener que rebuildear).
 
 ### 2. Capturas 6.9"
 - [ ] **Lucas**: sacar 5 capturas del iPhone con la app de TestFlight —

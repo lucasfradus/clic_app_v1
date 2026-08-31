@@ -364,9 +364,17 @@ las pruebas de abajo.
 
 #### A. Instalar
 1. App Store → instalar **TestFlight**.
-2. Abrir TestFlight con la **Apple ID del Developer Program**. Si no aparece la
-   app, agregarse como tester en ASC → *TestFlight* → *Internal Testing* → grupo
-   "Team (Expo)".
+2. Abrir TestFlight con la **Apple ID de la cuenta de desarrollador**
+   (`lucas.fradusco@gmail.com`). Si el iPhone está con otra Apple ID, la app no
+   aparece.
+
+   ⚠️ **Si TestFlight pide un "código de invitación", falta ser tester.** El
+   `--auto-testflight-setup` de `eas submit` crea el grupo interno "Team (Expo)"
+   y le asigna el build, pero lo deja **sin testers**: ni siquiera agrega al
+   Account Holder. Se arregla en ASC → *TestFlight* → *Internal Testing* → grupo
+   → **+** en Testers, o por API con `POST /v1/betaTesters` relacionando el
+   `betaGroup`. El código de invitación es para testers **externos**; los
+   internos entran por mail.
 3. Instalar **Clic Fitness**, build 8.
 
 #### B. Checklist funcional

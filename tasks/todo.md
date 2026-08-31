@@ -3,6 +3,73 @@
 App móvil (Expo/RN) de CLIC. Un solo tema neutro para todas las unidades
 (Pilates / Hot / Fitness). Ver `src/theme/index.ts`.
 
+## 🍏 App Store — lo que falta (al 31-ago-2026)
+
+Estado verificado contra la API de App Store Connect: **build 8 (1.0.0) está en
+TestFlight con `processingState: VALID`** y la versión 1.0 está en
+`PREPARE_FOR_SUBMISSION` (borrador, sin ficha). Google Play ya está publicada.
+
+Paso a paso en `docs/publicar-stores.md` §4. Copy listo en `docs/app-store-ficha.md`.
+
+### 0. Decisiones (destraban el resto)
+- [ ] **Nombre**: la app en ASC quedó como **"Clic Fitness"**, no "CLIC". Si se
+      deja así hay que ajustar `docs/app-store-ficha.md`: hoy dice `CLIC` y las
+      keywords incluyen `fitness`, que Apple ya indexa por el nombre (8 caracteres
+      desperdiciados de 100). Se puede renombrar mientras esté en
+      `PREPARE_FOR_SUBMISSION`.
+- [ ] **Pushear `feat/publicacion-ios`**: son 4 commits que existen sólo en la
+      máquina de Lucas (arreglos del build iOS, las dos fichas, config del submit).
+
+### 1. Humo en TestFlight — **Lucas**, ~20 min
+- [ ] Instalar **TestFlight** en el iPhone, entrar con la Apple ID del programa e
+      instalar el build 8 (grupo interno "Team (Expo)").
+- [ ] Login + "olvidé mi contraseña" (código de 6 dígitos por email).
+- [ ] Agenda: reservar y cancelar.
+- [ ] Credencial / QR.
+- [ ] Foto de perfil → que los permisos de **cámara** y **fotos** muestren los
+      textos en castellano del `infoPlist`.
+- [ ] **Push** ← lo más importante: nunca corrió en iOS. Que llegue y que al
+      tocarlo el deep-link abra la pantalla correcta.
+- [ ] Reportar lo que falle antes de seguir con la ficha.
+
+### 2. Capturas 6.9"
+- [ ] **Lucas**: sacar 5 capturas del iPhone con la app de TestFlight —
+      Home, Agenda, Cuenta, Novedades, Credencial/QR — y dejarlas crudas en
+      `store-assets/capturas-crudas-ios/`.
+- [ ] **Claude**: enmarcarlas a **1290×2796** con `sharp` (mismo estilo y títulos
+      que las de Play) y commitearlas en `store-assets/capturas-ios/`.
+
+Las capturas de Play son 1080×1920 y **no sirven**. No hacen falta capturas de
+iPad: `supportsTablet` está desactivado → app iPhone-only.
+
+### 3. Cargar la ficha en App Store Connect — **Lucas**
+Todo el contenido está en `docs/app-store-ficha.md`, listo para copiar y pegar.
+- [ ] Subtítulo, keywords, descripción y texto promocional.
+- [ ] Subir las capturas 6.9".
+- [ ] **App Privacy** (nutrition labels) → usar la tabla del doc. Ojo: tracking =
+      **NO**, y por eso la app no necesita el prompt de ATT.
+- [ ] **Age rating**, **Precio: Free**, URL de soporte y de privacidad.
+- [ ] **App Review**: pegar las notas en inglés del doc (explican los pagos fuera
+      de la app y el flujo de autorización de menores).
+- [ ] **App Access**: cargar el usuario demo con sede, plan activo y una reserva.
+      ⚠️ Verificar que el que se usó en Google Play siga funcionando.
+- [ ] Confirmar en *Business → Agreements* que no haya contratos pendientes.
+
+### 4. Enviar a revisión — **Lucas**
+- [ ] En la versión 1.0, seleccionar el **build 8**.
+- [ ] *Submit for Review*. La primera revisión tarda entre 24 h y unos días.
+
+### 5. No bloquean, pero conviene no olvidarlos
+- [ ] **16 dependencias desalineadas del SDK** (`expo@57.0.8` vs `~57.0.18`,
+      `react-native@0.86.0` vs `0.86.3`, etc.). Alinear con `npx expo install --fix`
+      en una rama propia y probar **Android además de iOS**. No se tocó durante la
+      publicación para no mezclar cambios en un build de 25 min.
+- [ ] La cuenta está enrolada como **Individual**: en la ficha el desarrollador
+      figura con el nombre personal, no "CLIC". Cambiarlo requiere migrar a
+      Organization (pide D-U-N-S). Se puede publicar ahora y migrar después.
+- [ ] `store-assets/README.md` dice 6.7" para iOS; Apple hoy pide **6.9"**.
+
+
 ## Backlog (pedido 2026-07-27)
 
 ### 1. Configuración (dentro de Perfil) ✅ (v1)

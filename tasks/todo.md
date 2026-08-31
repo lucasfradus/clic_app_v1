@@ -27,11 +27,11 @@ castellano.
 plataforma. Se probaron los 4 tipos mandándolos directo a la Expo Push API con
 el token de ese iPhone (los hooks reales habrían notificado a todos los socios
 de la sede). Llegaron los 4 y el deep-link abrió la pantalla correcta en cada
-caso:  y  → Agenda,  → Novedades,
- → Cuenta.
+caso: `lista_espera` y `clase_cancelada` → Agenda, `novedad` → Novedades,
+`vencimiento` → Cuenta.
 
 Nota: el token Android de ese alumno era el teléfono de Lucas, reasignado al
-loguearse con la cuenta del revisor ( es  por
+loguearse con la cuenta del revisor (`PushToken.token` es `@unique` por
 dispositivo, así que un teléfono sirve a una sola cuenta a la vez).
 
 - [x] **Build 8 asociado a la versión 1.0** (se hizo después del humo, ya sin

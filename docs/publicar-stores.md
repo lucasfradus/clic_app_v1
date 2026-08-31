@@ -356,18 +356,65 @@ EAS Build sube al builder todo lo que git no ignore.
 Después del submit, Apple **procesa** el binario 5-10 min y avisa por mail. Recién
 ahí aparece en TestFlight.
 
-### 4.7 Paso 5 — Humo en el iPhone
-Instalar **TestFlight** desde el App Store y entrar con la misma Apple ID.
-El export compliance ya no pregunta nada (`ITSAppUsesNonExemptEncryption`).
-Probar, en este orden:
-- [ ] Login + "olvidé mi contraseña" (código de 6 dígitos por email)
-- [ ] Agenda: reservar y cancelar
-- [ ] Credencial / QR
-- [ ] Foto de perfil → **permiso de cámara y de fotos** (que aparezcan los textos
-      en castellano del `infoPlist`)
-- [ ] **Push real** — es lo único de la app que nunca se probó en iOS. Disparar
-      uno desde Clicnet y verificar que llega y que el **deep-link** abre la
-      pantalla correcta.
+### 4.7 Paso 5 — Humo en el iPhone (TestFlight)
+
+Probar **con la cuenta del revisor** (`revisor@clicpilates.com` / `Clic2025`): es
+exactamente lo que va a ver Apple, y de paso deja el push token registrado para
+las pruebas de abajo.
+
+#### A. Instalar
+1. App Store → instalar **TestFlight**.
+2. Abrir TestFlight con la **Apple ID del Developer Program**. Si no aparece la
+   app, agregarse como tester en ASC → *TestFlight* → *Internal Testing* → grupo
+   "Team (Expo)".
+3. Instalar **Clic Fitness**, build 8.
+
+#### B. Checklist funcional
+- [ ] Login con la cuenta del revisor.
+- [ ] **Aceptar el permiso de notificaciones** cuando lo pida (sin esto no hay
+      push que probar).
+- [ ] Home: saludo y nombre.
+- [ ] Agenda: moverse entre semanas, **reservar** una clase y **cancelarla**.
+- [ ] Cuenta: plan, fechas de pago y vencimiento.
+- [ ] Novedades.
+- [ ] Credencial / QR.
+- [ ] Perfil → foto de perfil: que los permisos de **cámara** y de **fotos**
+      muestren los textos en castellano del `infoPlist`.
+
+⚠️ **No probar "olvidé mi contraseña" con esta cuenta**: cambiaría la clave que
+ya está declarada en App Review. Si se quiere probar ese flujo, usar otra cuenta
+y después verificar que la del revisor sigue siendo `Clic2025`.
+
+#### C. Push — lo único que nunca corrió en iOS
+Los hooks reales (novedad, lista de espera, vencimiento) mandarían push a **todos
+los socios de la sede**, así que no sirven para probar. En su lugar se le pega
+directo a la Expo Push API con el token de ese dispositivo:
+
+1. Con el login hecho, la app registra el token (`POST /push/register` →
+   tabla `PushToken`, `alumnoId` 20727, `activo=true`).
+2. Buscar el token de iOS de ese alumno y mandarle un push por cada `tipo`,
+   que es lo que la app usa para rutear (`src/lib/useNotificationRouting.ts`):
+
+| `data.tipo` | debe abrir |
+|---|---|
+| `lista_espera` | Agenda |
+| `clase_cancelada` | Agenda |
+| `novedad` | Novedades |
+| `vencimiento` | Cuenta |
+
+3. Verificar en el teléfono: que **llegue** la notificación (app cerrada) y que
+   al **tocarla** abra la pantalla correcta.
+
+#### D. Capturas
+Con la misma cuenta (tiene plan activo, así que las pantallas se ven con datos).
+Sacar con **botón lateral + subir volumen**:
+
+1. Home · 2. Agenda · 3. Cuenta · 4. Novedades · 5. Credencial/QR
+
+Pasarlas a la compu y dejarlas crudas en `store-assets/capturas-crudas-ios/`. El
+enmarcado a **1290×2796** se genera con `sharp`, igual que se hizo para Play. Si
+el iPhone no es Pro Max, no importa: las capturas se componen sobre un lienzo de
+la resolución exacta que pide Apple.
 
 ### 4.8 Paso 6 — Capturas y ficha
 - **Capturas**: sacarlas del iPhone (botón lateral + subir volumen) con la app de

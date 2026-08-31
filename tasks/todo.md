@@ -70,8 +70,8 @@ releyendo de Apple:
 - [x] **Descripción** (948/4000), **keywords** (93/100), **texto promocional**,
       **support URL**.
 - [x] **App Review Information**: notas en inglés + usuario demo
-      `revisor@clicpilates.com` / `Clic2025`. Contacto declarado: Lucas Fradusco,
-      +541121566704, info@clicpilates.com — **cambiarlo si se prefiere otro**.
+      `revisor@clicpilates.com` / `Clic2025`. Contacto para Apple: Lucas Fradusco,
+      +541121566704, lucas.fradusco@gmail.com.
 - [x] **Release: MANUAL** — la app sale cuando se aprieta el botón, no apenas
       Apple apruebe.
 - [x] Ya estaban de antes: nombre `Clic Fitness`, categoría *Health & Fitness* y

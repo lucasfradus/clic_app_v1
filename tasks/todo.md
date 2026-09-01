@@ -37,64 +37,39 @@ dispositivo, así que un teléfono sirve a una sola cuenta a la vez).
 - [x] **Build 8 asociado a la versión 1.0** (se hizo después del humo, ya sin
       riesgo de tener que rebuildear).
 
-### 2. Capturas 6.9"
-- [ ] **Lucas**: sacar 5 capturas del iPhone con la app de TestFlight —
-      Home, Agenda, Cuenta, Novedades, Credencial/QR — y dejarlas crudas en
-      `store-assets/capturas-crudas-ios/`.
-- [ ] **Claude**: enmarcarlas a **1290×2796** con `sharp` (mismo estilo y títulos
-      que las de Play) y commitearlas en `store-assets/capturas-ios/`.
+### 2. Capturas — ✅ HECHO (31-ago)
 
-Las capturas de Play son 1080×1920 y **no sirven**. No hacen falta capturas de
-iPad: `supportsTablet` está desactivado → app iPhone-only.
+Las 5 enmarcadas a **1290×2796** y subidas a ASC (`COMPLETE`), con los mismos
+títulos que las de Play. Script en `store-assets/frame-ios.js` (en el repo, no en
+un scratchpad: el de Play se perdió por eso).
 
-### 2.b Usuario del revisor — **Lucas** (decidido 31-ago)
+Las crudas llegaron por WhatsApp a 591×1280, así que están escaladas ~1,7×. Se
+ven bien, pero si alguna vez se rehacen conviene pasarlas sin compresión.
 
-Procedimiento completo en `docs/app-store-ficha.md` → "App Access". Resumen:
+### 3. Ficha en App Store Connect — ✅ completa
 
-- Cuenta **`revisor@clicpilates.com`**, en una **sede real con clases** (para que
-  la agenda se vea con datos), con un plan de modalidad **`PACK`** que no sea de
-  prueba.
-- [ ] Alta en el backoffice con **fecha de nacimiento de adulto** (evita el gate
-      de autorización de menores). Queda con la clave temporal `Clic2025`; la app
-      no fuerza cambiarla.
-- [ ] Cobrarle el plan PACK.
-- [ ] Entrar **desde Android** con esa cuenta: firmar el consentimiento (es un
-      gate de la app, no se puede desde el backoffice), reservar una clase futura
-      y cambiar la clave por una propia.
-- [ ] Cargar email + clave en ASC → *App Review Information*.
-- [ ] ⚠️ Al quedar en una sede real con suscripción vigente **cuenta como socio
-      activo** en los reportes de esa sede: darlo de baja cuando la app esté
-      aprobada.
+Verificado por API antes de enviar:
 
-### 3. Ficha en App Store Connect — ✅ cargada por API (31-ago)
+```
+VERSION 1.0 | PREPARE_FOR_SUBMISSION | release: MANUAL
+build asociado:  SI
+textos:          descripcion OK | keywords OK | supportUrl OK
+capturas:        5 | estados: COMPLETE
+app review:      demo revisor@clicpilates.com | notas OK
+app info:        subtitulo OK | privacyPolicyUrl OK
+```
 
-Se cargó con la App Store Connect API (key Admin en `C:Userslucas.appstore`),
-leyendo los textos de `docs/app-store-ficha.md` para que no diverjan. Verificado
-releyendo de Apple:
+Los **privacy labels** se cargaron a mano en la web (la API no los expone).
+Habían quedado publicados como *"Data Not Collected"*, que era falso y habría
+sido rechazo seguro: la app recolecta nombre, email, teléfono, dirección, DNI,
+fotos, antecedentes de salud, historial de pagos, device ID y uso.
 
-- [x] **Subtítulo** `Reservá clases en tu estudio` (28/30)
-- [x] **URL de privacidad** → va en la pantalla **App Privacy**, no en
-      *App Information*, aunque la API la exponga en `appInfoLocalizations`.
-- [x] **Descripción** (948/4000), **keywords** (93/100), **texto promocional**,
-      **support URL**.
-- [x] **App Review Information**: notas en inglés + usuario demo
-      `revisor@clicpilates.com` / `Clic2025`. Contacto para Apple: Lucas Fradusco,
-      +541121566704, lucas.fradusco@gmail.com.
-- [x] **Release: MANUAL** — la app sale cuando se aprieta el botón, no apenas
-      Apple apruebe.
-- [x] Ya estaban de antes: nombre `Clic Fitness`, categoría *Health & Fitness* y
-      el **age rating** declarado.
+### 4. Enviar a revisión — ⏸️ falta apretar el botón
 
-**Falta en esta pantalla:**
-- [ ] **App Privacy (nutrition labels)** — ⚠️ no se pudo verificar por API (los
-      endpoints `appDataUsages` devuelven 404): **revisar a mano en la web**. La
-      tabla con el mapeo está en `docs/app-store-ficha.md`.
-- [ ] **Capturas 6.9"** (0 cargadas) — bloqueado por el iPhone.
-- [ ] **Asociar el build** a la versión 1.0 (hoy no tiene ninguno). Conviene
-      hacerlo al final, después del humo: si el humo falla habrá un build nuevo.
-### 4. Enviar a revisión — **Lucas**
-- [ ] En la versión 1.0, seleccionar el **build 8**.
-- [ ] *Submit for Review*. La primera revisión tarda entre 24 h y unos días.
+- [ ] ASC → versión 1.0 → **Add for Review**.
+
+La versión está en **MANUAL**: aunque Apple apruebe, la app no sale a la tienda
+hasta publicarla a mano.
 
 ### 5. No bloquean, pero conviene no olvidarlos
 - [ ] **16 dependencias desalineadas del SDK** (`expo@57.0.8` vs `~57.0.18`,

@@ -41,7 +41,7 @@ export function clearToken() {
 }
 
 type Options = {
-  method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   body?: unknown;
   auth?: boolean;
   query?: Record<string, string | number | undefined>;

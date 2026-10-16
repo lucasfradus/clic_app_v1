@@ -76,12 +76,20 @@ export function tieneIncluida(s: ServicioConsultorio): boolean {
   return s.incluidasPorMes > 0 && s.meses.slice(0, 2).some((m) => m.disponibles > 0);
 }
 
+/** Entra como la incluida del mes: le queda alguna y la prestación es parte del abono. */
+export function entraComoIncluida(
+  s: ServicioConsultorio,
+  p: PrestacionConsultorio
+): boolean {
+  return p.incluidaEnAbono !== false && tieneIncluida(s);
+}
+
 /** Se puede sacar si entra como incluida o si se da como particular. */
 export function prestacionDisponible(
   s: ServicioConsultorio,
   p: PrestacionConsultorio
 ): boolean {
-  return tieneIncluida(s) || p.precioParticular !== null;
+  return entraComoIncluida(s, p) || p.precioParticular !== null;
 }
 
 /** "Te queda 1 consulta incluida en octubre" / "Ya usaste la de octubre"; null si el plan no incluye. */

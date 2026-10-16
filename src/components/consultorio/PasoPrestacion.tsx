@@ -4,7 +4,7 @@
 import { Text, View, StyleSheet } from 'react-native';
 import { Badge } from '@/components/ui/Badge';
 import Opcion from './Opcion';
-import { prestacionDisponible, tieneIncluida } from '@/lib/consultorio';
+import { entraComoIncluida, prestacionDisponible } from '@/lib/consultorio';
 import { formatARS } from '@/lib/date';
 import type { PrestacionConsultorio, ServicioConsultorio } from '@/types';
 import { colors, fonts } from '@/theme';
@@ -23,7 +23,6 @@ export default function PasoPrestacion({
   servicio: ServicioConsultorio;
   onElegir: (p: PrestacionConsultorio) => void;
 }) {
-  const incluida = tieneIncluida(servicio);
   const ninguna = !servicio.prestaciones.some((p) =>
     prestacionDisponible(servicio, p)
   );
@@ -33,6 +32,7 @@ export default function PasoPrestacion({
       {servicio.prestaciones.map((p) => {
         const disponible = prestacionDisponible(servicio, p);
         const particular = textoParticular(p);
+        const incluida = entraComoIncluida(servicio, p);
         return (
           <Opcion
             key={p.id}

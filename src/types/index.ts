@@ -90,6 +90,8 @@ export interface PrestacionConsultorio {
   precioParticular: number | null;
   /** Lo que se paga online (Mercado Pago) al reservar un horario particular. */
   sena: number;
+  /** false (ej. antropometría): nunca es la incluida del mes, solo particular. Ausente = true (backend viejo). */
+  incluidaEnAbono?: boolean;
 }
 
 export interface ServicioConsultorio {

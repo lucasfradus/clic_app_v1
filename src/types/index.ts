@@ -73,8 +73,82 @@ export interface Perfil {
   autorizacionMenoresEstado?: AutorizacionMenoresEstado | null;
   autorizacionMenoresMotivoRechazo?: string | null;
   sede: { id: number; nombre: string };
+  /** Su plan lo habilita a sacar citas de consultorio (nutrición, kinesio). Ausente en backends viejos (= no). */
+  consultorioDisponible?: boolean;
   suscripcionActiva: SuscripcionActiva | null;
   ultimosPagos: UltimoPago[];
+}
+
+// ─── Consultorio (citas con profesionales) ───
+
+export interface PrestacionConsultorio {
+  id: number;
+  nombre: string;
+  descripcion: string | null;
+  duracionMinutos: number;
+  /** null: la prestación no se da en horarios particulares. */
+  precioParticular: number | null;
+  /** Lo que se paga online (Mercado Pago) al reservar un horario particular. */
+  sena: number;
+}
+
+export interface ServicioConsultorio {
+  servicioId: number;
+  nombre: string;
+  sede: { id: number; nombre: string; direccion: string | null };
+  horasCancelacion: number;
+  diasReservaAnticipada: number;
+  prestaciones: PrestacionConsultorio[];
+  /** Incluidas por mes según su plan (0 = solo particulares). */
+  incluidasPorMes: number;
+  /** Mes actual y siguiente: cuántas incluidas le quedan. `desde` es YYYY-MM-DD. */
+  meses: { mes: string; desde: string; disponibles: number }[];
+}
+
+export type ModalidadCita = 'INCLUIDA' | 'PARTICULAR';
+
+export interface HuecoConsultorio {
+  franjaId: number;
+  inicio: string;
+  fin: string;
+  modalidad: ModalidadCita;
+  profesional: string;
+}
+
+export interface CitaConsultorio {
+  id: number;
+  inicio: string;
+  fin: string;
+  estado: string;
+  modalidad: ModalidadCita;
+  prestacion: { id: number; nombre: string };
+  servicio: string;
+  profesional: string;
+  sede: { id: number; nombre: string; direccion: string | null };
+  consultorio: string | null;
+  /** Hasta cuándo puede cancelar o reprogramar (ISO). */
+  cancelableHasta: string;
+  /** Particular: precio de la consulta y seña pagada (el resto va al profesional). */
+  precio: number | null;
+  sena: number | null;
+}
+
+/** Ir a pagar la seña: link de MP, o la cita directa si el servicio no cobra seña. */
+export type InicioSena =
+  | {
+      solicitudId: number;
+      initPoint: string;
+      monto: number;
+      precio: number;
+      expiraEn: string;
+    }
+  | { citaId: number; message: string };
+
+export interface EstadoSena {
+  estado: 'PENDIENTE' | 'PROCESADA' | 'VENCIDA' | 'SIN_LUGAR';
+  citaId: number | null;
+  expiraEn: string;
+  monto: number;
 }
 
 export type SuscripcionModalidad = 'HORARIO_FIJO' | 'PACK';

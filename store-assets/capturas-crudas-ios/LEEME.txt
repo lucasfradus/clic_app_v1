@@ -1,0 +1,15 @@
+Dejar aca las 5 capturas crudas sacadas del iPhone (boton lateral + subir volumen),
+con la cuenta del revisor (tiene plan activo, asi que las pantallas se ven con datos):
+
+  1-home        Home / saludo
+  2-agenda      Agenda con la grilla de clases
+  3-cuenta      Cuenta: plan, ultimo pago y vencimiento
+  4-novedades   Novedades
+  5-credencial  Credencial / QR
+
+El nombre no importa (pueden ser IMG_xxxx.PNG): se ordenan a mano al enmarcar.
+El enmarcado a 1290x2796 (6.9", lo unico obligatorio hoy en App Store) se genera
+con sharp, igual que se hizo para Play. Si el iPhone no es Pro Max no importa:
+la captura se compone sobre un lienzo de la resolucion exacta que pide Apple.
+
+Ver docs/publicar-stores.md 4.7 D.

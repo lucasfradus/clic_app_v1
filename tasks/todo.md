@@ -3,6 +3,85 @@
 App móvil (Expo/RN) de CLIC. Un solo tema neutro para todas las unidades
 (Pilates / Hot / Fitness). Ver `src/theme/index.ts`.
 
+## 🍏 App Store — lo que falta (al 31-ago-2026)
+
+Estado verificado contra la API de App Store Connect: **build 8 (1.0.0) está en
+TestFlight con `processingState: VALID`** y la versión 1.0 está en
+`PREPARE_FOR_SUBMISSION` (borrador, sin ficha). Google Play ya está publicada.
+
+Paso a paso en `docs/publicar-stores.md` §4. Copy listo en `docs/app-store-ficha.md`.
+
+### 0. Decisiones (destraban el resto)
+- [x] **Nombre**: queda **"Clic Fitness"** — "CLIC" a secas ya estaba registrado
+      por otro desarrollador y el nombre es único global. Ficha ajustada (salió
+      `fitness` de las keywords, que Apple ya indexa por el nombre).
+- [x] **Rama `feat/publicacion-ios` pusheada** a origin.
+
+### 1. Humo en TestFlight — ✅ HECHO (31-ago)
+
+Probado en iPhone con la cuenta del revisor. Anduvo todo: login, agenda,
+cuenta, novedades, credencial y los permisos de cámara/fotos con los textos en
+castellano.
+
+**El push funciona en iOS** — era lo único que nunca había corrido en esa
+plataforma. Se probaron los 4 tipos mandándolos directo a la Expo Push API con
+el token de ese iPhone (los hooks reales habrían notificado a todos los socios
+de la sede). Llegaron los 4 y el deep-link abrió la pantalla correcta en cada
+caso: `lista_espera` y `clase_cancelada` → Agenda, `novedad` → Novedades,
+`vencimiento` → Cuenta.
+
+Nota: el token Android de ese alumno era el teléfono de Lucas, reasignado al
+loguearse con la cuenta del revisor (`PushToken.token` es `@unique` por
+dispositivo, así que un teléfono sirve a una sola cuenta a la vez).
+
+- [x] **Build 8 asociado a la versión 1.0** (se hizo después del humo, ya sin
+      riesgo de tener que rebuildear).
+
+### 2. Capturas — ✅ HECHO (31-ago)
+
+Las 5 enmarcadas a **1290×2796** y subidas a ASC (`COMPLETE`), con los mismos
+títulos que las de Play. Script en `store-assets/frame-ios.js` (en el repo, no en
+un scratchpad: el de Play se perdió por eso).
+
+Las crudas llegaron por WhatsApp a 591×1280, así que están escaladas ~1,7×. Se
+ven bien, pero si alguna vez se rehacen conviene pasarlas sin compresión.
+
+### 3. Ficha en App Store Connect — ✅ completa
+
+Verificado por API antes de enviar:
+
+```
+VERSION 1.0 | PREPARE_FOR_SUBMISSION | release: MANUAL
+build asociado:  SI
+textos:          descripcion OK | keywords OK | supportUrl OK
+capturas:        5 | estados: COMPLETE
+app review:      demo revisor@clicpilates.com | notas OK
+app info:        subtitulo OK | privacyPolicyUrl OK
+```
+
+Los **privacy labels** se cargaron a mano en la web (la API no los expone).
+Habían quedado publicados como *"Data Not Collected"*, que era falso y habría
+sido rechazo seguro: la app recolecta nombre, email, teléfono, dirección, DNI,
+fotos, antecedentes de salud, historial de pagos, device ID y uso.
+
+### 4. Enviar a revisión — ⏸️ falta apretar el botón
+
+- [ ] ASC → versión 1.0 → **Add for Review**.
+
+La versión está en **MANUAL**: aunque Apple apruebe, la app no sale a la tienda
+hasta publicarla a mano.
+
+### 5. No bloquean, pero conviene no olvidarlos
+- [ ] **16 dependencias desalineadas del SDK** (`expo@57.0.8` vs `~57.0.18`,
+      `react-native@0.86.0` vs `0.86.3`, etc.). Alinear con `npx expo install --fix`
+      en una rama propia y probar **Android además de iOS**. No se tocó durante la
+      publicación para no mezclar cambios en un build de 25 min.
+- [ ] La cuenta está enrolada como **Individual**: en la ficha el desarrollador
+      figura con el nombre personal, no "CLIC". Cambiarlo requiere migrar a
+      Organization (pide D-U-N-S). Se puede publicar ahora y migrar después.
+- [ ] `store-assets/README.md` dice 6.7" para iOS; Apple hoy pide **6.9"**.
+
+
 ## Backlog (pedido 2026-07-27)
 
 ### 1. Configuración (dentro de Perfil) ✅ (v1)

@@ -76,6 +76,8 @@ export default function TabsLayout() {
       <Tabs.Screen name="cuenta" />
       <Tabs.Screen name="novedades" />
       <Tabs.Screen name="perfil" />
+      {/* Sin tab propio (ClicTabBar es una lista fija): se entra desde Home. */}
+      <Tabs.Screen name="consultorio" />
     </Tabs>
   );
 }

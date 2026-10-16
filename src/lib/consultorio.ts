@@ -2,7 +2,10 @@
 // dispositivo: el backend recibe y devuelve días como YYYY-MM-DD de Argentina.
 // Argentina está en UTC-3 fijo (sin horario de verano desde 2009), así que se
 // corre el instante 3 h y se leen los campos UTC. No depende del soporte de
-// zonas horarias de Intl en el motor JS.
+// zonas horarias de Intl en el motor JS. Al final, qué puede reservar en cada
+// servicio (lo usan los pasos de "Sacar una cita").
+
+import type { PrestacionConsultorio, ServicioConsultorio } from '@/types';
 
 const OFFSET_AR_MS = -3 * 60 * 60 * 1000;
 
@@ -64,4 +67,31 @@ export function horaAR(iso: string): string {
 /** ¿Todavía puede cancelar o reprogramar él mismo? */
 export function puedeModificar(cancelableHasta: string, ahora: Date = new Date()): boolean {
   return new Date(cancelableHasta).getTime() > ahora.getTime();
+}
+
+// ── Qué puede reservar en cada servicio ──
+
+/** ¿Le queda alguna incluida este mes o el que viene? */
+export function tieneIncluida(s: ServicioConsultorio): boolean {
+  return s.incluidasPorMes > 0 && s.meses.slice(0, 2).some((m) => m.disponibles > 0);
+}
+
+/** Se puede sacar si entra como incluida o si se da como particular. */
+export function prestacionDisponible(
+  s: ServicioConsultorio,
+  p: PrestacionConsultorio
+): boolean {
+  return tieneIncluida(s) || p.precioParticular !== null;
+}
+
+/** "Te queda 1 consulta incluida en octubre" / "Ya usaste la de octubre"; null si el plan no incluye. */
+export function textoIncluidas(s: ServicioConsultorio): string | null {
+  const mes = s.meses[0];
+  if (s.incluidasPorMes === 0 || !mes) return null;
+  if (mes.disponibles === 0) {
+    return `Ya usaste ${s.incluidasPorMes === 1 ? 'la' : 'las'} de ${mes.mes}`;
+  }
+  return mes.disponibles === 1
+    ? `Te queda 1 consulta incluida en ${mes.mes}`
+    : `Te quedan ${mes.disponibles} consultas incluidas en ${mes.mes}`;
 }

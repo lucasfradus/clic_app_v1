@@ -59,7 +59,8 @@
             "useFrameworks": "static"
           }
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,
@@ -71,6 +72,14 @@
         "projectId": "7e7c4b25-b893-4afc-894a-ddd0b34a7b2f"
       }
     },
-    "owner": "lucasfra"
+    "owner": "lucasfra",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/7e7c4b25-b893-4afc-894a-ddd0b34a7b2f",
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
+    }
   }
 }

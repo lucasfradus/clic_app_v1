@@ -160,6 +160,24 @@ export default function Home() {
         </Pressable>
       )}
 
+      {/* Consultorio: solo si su plan lo habilita. Es la única entrada (la tab
+          bar no lo tiene). */}
+      {perfil?.consultorioDisponible && (
+        <Pressable
+          style={styles.consultorioBtn}
+          onPress={() => router.navigate('/consultorio')}
+        >
+          <Text style={styles.consultorioIcon}>✚</Text>
+          <View style={styles.qrText}>
+            <Text style={styles.consultorioTitle}>Consultorio</Text>
+            <Text style={styles.consultorioSub}>
+              Sacá tu cita con un profesional
+            </Text>
+          </View>
+          <Text style={styles.qrCaret}>→</Text>
+        </Pressable>
+      )}
+
       {/* Hero: próxima clase */}
       {proxima ? (
         <Pressable onPress={() => router.navigate('/agenda')}>
@@ -449,6 +467,34 @@ const styles = StyleSheet.create({
     color: 'rgba(253, 251, 250, 0.55)',
   },
   qrCaret: { fontSize: 18, color: colors.neutral },
+
+  // Misma forma que el botón del QR, en card clara: el QR sigue siendo el
+  // acceso principal.
+  consultorioBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.lineSoft,
+    borderRadius: radius.card,
+    paddingVertical: 18,
+    paddingHorizontal: 22,
+    marginBottom: 20,
+  },
+  consultorioIcon: { fontSize: 26, lineHeight: 30, color: colors.ink },
+  consultorioTitle: {
+    fontFamily: fonts.semibold,
+    fontSize: 16,
+    color: colors.ink,
+  },
+  consultorioSub: {
+    fontFamily: fonts.regular,
+    fontSize: 11,
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
+    color: colors.inkMute,
+  },
 
   hero: { marginBottom: 36 },
   heroRow: { marginTop: 18, gap: 18, zIndex: 1 },

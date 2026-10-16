@@ -12,6 +12,10 @@ export type AnalyticsEventName =
   | 'lista_espera'
   | 'cancelar_reserva'
   | 'salir_lista_espera'
+  | 'reservar_cita'
+  | 'iniciar_sena'
+  | 'reprogramar_cita'
+  | 'cancelar_cita'
   | 'page_view';
 
 type AnalyticsInstance = {

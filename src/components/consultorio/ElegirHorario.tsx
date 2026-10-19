@@ -146,9 +146,12 @@ export default function ElegirHorario({
                 >
                   {h.modalidad === 'INCLUIDA'
                     ? 'Incluida'
-                    : sena
-                      ? `Particular · seña ${formatARS(sena)}`
-                      : 'Particular'}
+                    : // Cada profesional tiene su precio. Al reprogramar no se muestra: la cita conserva el que pagó.
+                      !citaId && h.precio != null
+                      ? `Particular · ${formatARS(h.precio)}`
+                      : sena
+                        ? `Particular · seña ${formatARS(sena)}`
+                        : 'Particular'}
                 </Badge>
               </View>
             </Pressable>

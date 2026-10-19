@@ -9,11 +9,10 @@ import { formatARS } from '@/lib/date';
 import type { PrestacionConsultorio, ServicioConsultorio } from '@/types';
 import { colors, fonts } from '@/theme';
 
+/** El precio varía por profesional: acá va el más barato; el de cada uno se ve al elegir el horario. */
 function textoParticular(p: PrestacionConsultorio): string | null {
   if (p.precioParticular === null) return null;
-  return p.sena > 0
-    ? `Particular ${formatARS(p.precioParticular)} · seña ${formatARS(p.sena)}`
-    : `Particular ${formatARS(p.precioParticular)}`;
+  return `Particular desde ${formatARS(p.precioParticular)}`;
 }
 
 export default function PasoPrestacion({

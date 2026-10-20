@@ -17,6 +17,7 @@ import { Badge } from '@/components/ui/Badge';
 import ConfirmModal from '@/components/ui/ConfirmModal';
 import { useAuth } from '@/store/auth';
 import { useSelectedSede } from '@/store/sede';
+import { useNovedades } from '@/store/novedades';
 import { getSuscripciones } from '@/api/suscripciones';
 import { getTurnos } from '@/api/turnos';
 import { salirListaEspera } from '@/api/reservas';
@@ -38,6 +39,7 @@ const dimLabel = { color: 'rgba(253,251,250,0.5)' };
 
 export default function Home() {
   const perfil = useAuth((s) => s.perfil);
+  const noLeidas = useNovedades((s) => s.noLeidas);
   const selectedSede = useSelectedSede();
   const [suscripciones, setSuscripciones] = useState<Suscripcion[]>([]);
   const [turnos, setTurnos] = useState<Turno[]>([]);
@@ -176,6 +178,36 @@ export default function Home() {
           </View>
           <Text style={styles.qrCaret}>→</Text>
         </Pressable>
+      )}
+
+      {/* Musculación: acceso a la rutina. Para estos socios la pestaña News pasa
+          a ser Rutina, así que las novedades quedan a mano desde acá. */}
+      {perfil?.musculacionDisponible && (
+        <View style={styles.atajos}>
+          <Pressable
+            style={[styles.consultorioBtn, styles.atajo]}
+            onPress={() => router.navigate('/rutina')}
+          >
+            <View style={styles.qrText}>
+              <Text style={styles.consultorioTitle}>Mi rutina</Text>
+              <Text style={styles.consultorioSub}>Videos y pesos</Text>
+            </View>
+            <Text style={styles.qrCaret}>→</Text>
+          </Pressable>
+          <Pressable
+            style={[styles.consultorioBtn, styles.atajoChico]}
+            onPress={() => router.navigate('/novedades')}
+          >
+            <View style={styles.qrText}>
+              <Text style={styles.consultorioTitle}>Novedades</Text>
+              {noLeidas > 0 && (
+                <Text style={styles.consultorioSub}>
+                  {noLeidas > 9 ? '9+' : noLeidas} sin leer
+                </Text>
+              )}
+            </View>
+          </Pressable>
+        </View>
       )}
 
       {/* Hero: próxima clase */}
@@ -483,6 +515,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   consultorioIcon: { fontSize: 26, lineHeight: 30, color: colors.ink },
+  // Mi rutina + Novedades en una fila (con musculación la tab News es Rutina).
+  atajos: { flexDirection: 'row', gap: 10, marginBottom: 20 },
+  atajo: { flex: 2, marginBottom: 0 },
+  atajoChico: { flex: 1, marginBottom: 0, paddingHorizontal: 16 },
   consultorioTitle: {
     fontFamily: fonts.semibold,
     fontSize: 16,

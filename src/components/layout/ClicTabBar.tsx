@@ -1,9 +1,12 @@
 // Bottom tab bar custom (port de MobileTabBar.tsx): labels uppercase con
 // borde superior taupe en el tab activo, sin iconos — igual que la web.
 // Orden móvil según spec §3: Home · Agenda · Cuenta · News · Perfil.
+// Con musculación, News pasa a ser Rutina (igual que la web); las novedades
+// quedan a mano desde Home.
 import { Pressable, Text, View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router, usePathname } from 'expo-router';
+import { useAuth } from '../../store/auth';
 import { useNovedades } from '../../store/novedades';
 import { colors, fonts } from '../../theme';
 
@@ -15,15 +18,21 @@ const tabs = [
   { href: '/perfil', label: 'Perfil', exact: false },
 ] as const;
 
+const tabRutina = { href: '/rutina', label: 'Rutina', exact: false } as const;
+
 export default function ClicTabBar() {
   const pathname = usePathname();
   const insets = useSafeAreaInsets();
   const noLeidas = useNovedades((s) => s.noLeidas);
+  const musculacion = useAuth((s) => !!s.perfil?.musculacionDisponible);
   const badges: Record<string, number> = { '/novedades': noLeidas };
+  const visibles = musculacion
+    ? tabs.map((t) => (t.href === '/novedades' ? tabRutina : t))
+    : tabs;
 
   return (
     <View style={[styles.bar, { paddingBottom: insets.bottom }]}>
-      {tabs.map((t) => {
+      {visibles.map((t) => {
         const active = t.exact
           ? pathname === t.href
           : pathname.startsWith(t.href);

@@ -13,13 +13,18 @@ import type {
 } from '@/types';
 import { colors, fonts } from '@/theme';
 
+/** Precio y seña del horario elegido (los de su profesional); sin ellos (API vieja), los de la prestación. */
+function precioDelHueco(h: HuecoConsultorio, p: PrestacionConsultorio): { precio: number | null; sena: number } {
+  return h.precio != null ? { precio: h.precio, sena: h.sena ?? 0 } : { precio: p.precioParticular, sena: p.sena };
+}
+
 /** Precio, seña, resto, retención de 15 minutos y que la seña no se devuelve. */
-function notaParticular(p: PrestacionConsultorio): string | null {
-  if (p.precioParticular === null) return null;
+function notaParticular({ precio, sena }: { precio: number | null; sena: number }): string | null {
+  if (precio === null) return null;
   return (
-    `Consulta particular de ${formatARS(p.precioParticular)}.` +
-    (p.sena > 0
-      ? ` Ahora pagás la seña de ${formatARS(p.sena)} con Mercado Pago y el resto (${formatARS(p.precioParticular - p.sena)}) se lo pagás al profesional el día de la consulta. Te guardamos el horario 15 minutos. La seña no se devuelve: si cancelás la perdés; si cambiás el horario, la conservás.`
+    `Consulta particular de ${formatARS(precio)}.` +
+    (sena > 0
+      ? ` Ahora pagás la seña de ${formatARS(sena)} con Mercado Pago y el resto (${formatARS(precio - sena)}) se lo pagás al profesional el día de la consulta. Te guardamos el horario 15 minutos. La seña no se devuelve: si cancelás la perdés; si cambiás el horario, la conservás.`
       : ' Se la pagás al profesional el día de la consulta.')
   );
 }
@@ -40,9 +45,10 @@ export default function PasoConfirmar({
   onVolver: () => void;
 }) {
   const particular = hueco.modalidad === 'PARTICULAR';
-  const conSena = particular && prestacion.sena > 0;
-  const nota = particular ? notaParticular(prestacion) : 'Incluida en tu plan';
-  const primario = conSena ? `Pagar seña ${formatARS(prestacion.sena)}` : 'Confirmar';
+  const elegido = precioDelHueco(hueco, prestacion);
+  const conSena = particular && elegido.sena > 0;
+  const nota = particular ? notaParticular(elegido) : 'Incluida en tu plan';
+  const primario = conSena ? `Pagar seña ${formatARS(elegido.sena)}` : 'Confirmar';
 
   return (
     <Card>

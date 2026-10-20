@@ -86,9 +86,12 @@ export interface PrestacionConsultorio {
   nombre: string;
   descripcion: string | null;
   duracionMinutos: number;
-  /** null: la prestación no se da en horarios particulares. */
+  /**
+   * DESDE: el más barato de los profesionales (cada horario trae el suyo). null: la
+   * prestación no se da en horarios particulares.
+   */
   precioParticular: number | null;
-  /** Lo que se paga online (Mercado Pago) al reservar un horario particular. */
+  /** La seña de ese precio: lo que se paga online (Mercado Pago) al reservar un horario particular. */
   sena: number;
 }
 
@@ -113,6 +116,9 @@ export interface HuecoConsultorio {
   fin: string;
   modalidad: ModalidadCita;
   profesional: string;
+  /** Particular: precio de ese profesional y la seña (varían por profesional). */
+  precio?: number;
+  sena?: number;
 }
 
 export interface CitaConsultorio {

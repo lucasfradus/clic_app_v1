@@ -2,7 +2,7 @@
   "expo": {
     "name": "CLIC",
     "slug": "clic-app",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "clic",
@@ -61,7 +61,8 @@
         }
       ],
       "expo-web-browser",
-      "expo-video"
+      "expo-video",
+      "expo-image"
     ],
     "experiments": {
       "typedRoutes": true,

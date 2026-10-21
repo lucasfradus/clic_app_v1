@@ -75,6 +75,8 @@ export interface Perfil {
   sede: { id: number; nombre: string };
   /** Su plan lo habilita a sacar citas de consultorio (nutrición, kinesio). Ausente en backends viejos (= no). */
   consultorioDisponible?: boolean;
+  /** Tiene una rutina de musculación asignada: la pestaña News pasa a ser Rutina. Ausente en backends viejos (= no). */
+  musculacionDisponible?: boolean;
   suscripcionActiva: SuscripcionActiva | null;
   ultimosPagos: UltimoPago[];
 }
@@ -403,4 +405,69 @@ export interface PoliticasTexto {
   version: string;
   titulo: string;
   texto: string;
+}
+
+// ── Musculación (GET /musculacion) ─────────────────────────────────────────
+
+export interface EjercicioRutina {
+  ejercicioId: number;
+  nombre: string;
+  /**
+   * URL firmada por 12 h, relativa al backend (usar `urlVideo`).
+   * null = el ejercicio no tiene video; "" = el backend no pudo firmarlo.
+   */
+  videoUrl: string | null;
+  series: number | null;
+  repeticiones: string;
+  rir: string;
+  tiempoSegundos: number | null;
+  descansoSegundos: number | null;
+  cargaKg: number | null;
+}
+
+export interface BloqueRutina {
+  key: string;
+  nombre: string;
+  vueltas: number;
+  ejercicios: EjercicioRutina[];
+}
+
+export interface DiaRutina {
+  key: string;
+  bloques: BloqueRutina[];
+}
+
+export interface RutinaAsignada {
+  id: number;
+  version: number;
+  nombre: string;
+  dias: DiaRutina[];
+}
+
+/** Un día entrenado. Guarda una copia de los bloques: no cambia si el profe edita la rutina. */
+export interface EntrenamientoMusculacion {
+  id: number;
+  version: number;
+  asignacionId: number;
+  diaKey: string;
+  diaNumero: number;
+  rutinaNombre: string;
+  /** YYYY-MM-DD, fecha argentina. */
+  fecha: string;
+  bloques: BloqueRutina[];
+  /** Keys de los bloques terminados. */
+  completados: string[];
+  /** kg por ejercicio, con clave `${bloqueKey}:${indiceEjercicio}`. */
+  pesos: Record<string, number>;
+}
+
+export interface MusculacionEstado {
+  /** YYYY-MM-DD, fecha argentina según el servidor. */
+  hoy: string;
+  rutina: RutinaAsignada | null;
+  /** Día para mostrar primero: el que está en curso hoy o el siguiente al último entrenado. */
+  diaSugeridoKey: string | null;
+  /** Último peso de cada ejercicio (por ejercicioId) sin contar hoy: "la vez pasada". */
+  pesosAnteriores: Record<string, { kg: number; fecha: string }>;
+  entrenamientos: EntrenamientoMusculacion[];
 }

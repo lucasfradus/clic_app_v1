@@ -16,6 +16,8 @@ export type AnalyticsEventName =
   | 'iniciar_sena'
   | 'reprogramar_cita'
   | 'cancelar_cita'
+  | 'iniciar_entrenamiento'
+  | 'terminar_bloque'
   | 'page_view';
 
 type AnalyticsInstance = {
